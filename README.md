@@ -23,5 +23,4 @@ How to setup docker and start the cluster image.
   - 'make docker-run-d' to run it in the background
   - 'make docker-run-interactive' starts /bin/bash (good for debugging) [start.sh have to be runned manually. No cluster will be created, Supervisord will not start automatically]
 
-- redis-trib.rb will prompt your for a question to create the cluster, type 'yes' and press enter.
 - Test the connection by running either 'redis-cli -p 7000' (or any other cluster port)

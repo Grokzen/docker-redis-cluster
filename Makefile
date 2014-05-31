@@ -21,7 +21,7 @@ docker-run-d:
 
 docker-run-interactive:
 	@echo "Running docker image in interactive mode..."
-	sudo docker run -p 7000:7000 -p 7001:7001 -p 7002:7002 -p 7003:7003 -p 7004:7004 -p 7005:7005 -i -t redis-server /bin/bash
+	sudo docker run -p 7000:7000 -p 7001:7001 -p 7002:7002 -p 7003:7003 -p 7004:7004 -p 7005:7005 -i -t redis-server /sbin/my_init --enable-insecure-key -- /bin/bash
 
 docker-kill:
 	@echo "NYI"

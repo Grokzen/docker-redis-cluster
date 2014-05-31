@@ -1,9 +1,30 @@
-FROM ubuntu:12.04
+# This tag use ubuntu 12.04
+FROM phusion/baseimage:0.9.9
+
 MAINTAINER Johan Grokzen Andersson <Grokzen@gmail.com>
 
-# Upgrade the base image with latests packages
-RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
-RUN apt-get update && apt-get upgrade -y
+ENV HOME /root
+
+RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
+
+# Some Environment Variables
+ENV DEBIAN_FRONTEND noninteractive
+
+# # Ensure UTF-8 lang and locale
+RUN locale-gen en_US.UTF-8
+ENV LANG       en_US.UTF-8
+ENV LC_ALL     en_US.UTF-8
+
+# Initial update and install of dependency that can add apt-repos
+RUN apt-get -y update
+RUN apt-get install -y software-properties-common python-software-properties
+
+# Add global apt repos
+RUN add-apt-repository -y "deb http://archive.ubuntu.com/ubuntu precise universe"
+RUN add-apt-repository -y "deb http://archive.ubuntu.com/ubuntu precise main restricted universe multiverse"
+RUN add-apt-repository -y "deb http://archive.ubuntu.com/ubuntu precise-updates main restricted universe multiverse"
+RUN add-apt-repository -y "deb http://archive.ubuntu.com/ubuntu precise-backports main restricted universe multiverse"
+RUN apt-get update && apt-get -y upgrade
 
 # Install system dependencies
 RUN apt-get install -y gcc make g++ build-essential libc6-dev tcl git supervisor
@@ -27,17 +48,11 @@ ADD ./docker-data/redis-conf /redis-conf
 # Add supervisord configuration
 ADD ./docker-data/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Expose all cluster ports to the outside
-EXPOSE 7000
-EXPOSE 7001
-EXPOSE 7002
-EXPOSE 7003
-EXPOSE 7004
-EXPOSE 7005
-
 # Add startup script
 ADD ./docker-data/start.sh /start.sh
 RUN chmod 755 /start.sh
 
-# ENTRYPOINT ["/bin/bash"]
-CMD ["/bin/bash",  "/start.sh"]
+# TODO: This command is the one that should be runned but currently start.sh script crashes out with an error
+# CMD ["/sbin/my_init", "--enable-insecure-key", "--", "/bin/bash -c '/start.sh'"]
+
+CMD ["/bin/bash", "/start.sh"]
