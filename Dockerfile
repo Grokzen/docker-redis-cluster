@@ -41,7 +41,7 @@ RUN (cd /redis && make)
 RUN gem install redis
 
 # Because Git cannot track empty folders we have to create them manually...
-RUN mkdir /redis-data && mkdir /redis-data/7000 && mkdir /redis-data/7001 && mkdir /redis-data/7002 && mkdir /redis-data/7003 && mkdir /redis-data/7004 && mkdir /redis-data/7005
+RUN mkdir /redis-data && mkdir /redis-data/7000 && mkdir /redis-data/7001 && mkdir /redis-data/7002 && mkdir /redis-data/7003 && mkdir /redis-data/7004 && mkdir /redis-data/7005 && mkdir /redis-data/7006 && mkdir /redis-data/7007
 
 # Add all config files for all clusters
 ADD ./docker-data/redis-conf /redis-conf
