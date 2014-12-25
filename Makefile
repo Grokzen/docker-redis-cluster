@@ -1,35 +1,35 @@
+CID_FILE = /tmp/grokzen-redis-cluster.cid
+CID =`cat $(CID_FILE)`
+IMAGE_NAME = grokzen/redis-cluster
+PORTS = -p 7000:7000 -p 7001:7001 -p 7002:7002 -p 7003:7003 -p 7004:7004 -p 7005:7005 -p 7006:7006 -p 7007:7007
+
 help:
 	@echo "Please use 'make <target>' where <target> is one of"
-	@echo "  docker-build                build the docker image containing a redis cluster"
-	@echo "  docker-rebuild              rebuilds the image from scratch without using any cached layers"
-	@echo "  docker-run                  run the built docker image"
-	@echo "  docker-run-d                run the built docker image"
-	@echo "  docker-run-interactive      run the built docker image"
-	@echo "  docker-kill                 send stop signal to the running docker instance. do not remove image."
-	@echo "  docker-remove               remove the built docker image from you system"
+	@echo "  dbuild           build the docker image containing a redis cluster"
+	@echo "  drebuild         rebuilds the image from scratch without using any cached layers"
+	@echo "  drun             run the built docker image"
+	@echo "  dbash            starts bash inside a running container."
+	@echo "  dclean           removes the tmp cid file on disk"
 
-docker-build:
+dbuild:
 	@echo "Building docker image..."
-	docker build -t redis-server .
+	docker build -t ${IMAGE_NAME} .
 
-docker-rebuild:
+drebuild:
 	@echo "Rebuilding docker image..."
-	docker build --no-cache=true -t redis-server .
+	docker build --no-cache=true -t ${IMAGE_NAME} .
 
-docker-run:
+drun:
 	@echo "Running docker image..."
-	docker run -p 7000:7000 -p 7001:7001 -p 7002:7002 -p 7003:7003 -p 7004:7004 -p 7005:7005 -i -t redis-server
+	docker run -d $(PORTS) --cidfile $(CID_FILE) -i -t ${IMAGE_NAME}
 
-docker-run-d:
-	@echo "Running docker image in daemon mode..."
-	docker run -d -p 7000:7000 -p 7001:7001 -p 7002:7002 -p 7003:7003 -p 7004:7004 -p 7005:7005 -i -t redis-server
+dbash:
+	docker exec -it $(CID) /bin/bash
 
-docker-run-interactive:
-	@echo "Running docker image in interactive mode..."
-	docker run -p 7000:7000 -p 7001:7001 -p 7002:7002 -p 7003:7003 -p 7004:7004 -p 7005:7005 -i -t redis-server /sbin/my_init --enable-insecure-key -- /bin/bash
+dstop:
+	docker stop $(CID)
+	-make dclean
 
-docker-kill:
-	@echo "NYI"
-
-docker-remove:
-	@echo "NYI"
+dclean:
+	# Cleanup cidfile on disk
+	-rm $(CID_FILE)
