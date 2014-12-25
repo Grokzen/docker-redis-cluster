@@ -16,6 +16,8 @@ How to setup docker and start the cluster image.
 
 Install `docker` on your system. 1.0 or higher is recommended. Instructions can be found at http://docs.docker.com/en/latest/installation/. It is also reccomended to add the current user to `docker` system group to remove the need to add sudo to each docker call.
 
+Download the latest build from docker hub with `docker pull grokzen/redis-cluster`
+
 To build the image run either `make dbuild` or `make drebuild`. It will be built to the image name `grokzen/redis-cluster`.
 
 To start the image run `make drun`. It will be started in the background. To gain access to the running image you can get a bash session by running `make dbash`.
