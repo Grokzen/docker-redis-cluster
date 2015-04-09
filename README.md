@@ -6,15 +6,19 @@ The cluster is 6 redis instances running with 3 master & 3 slaves, one slave for
 
 It also contains 2 standalone instances that is not part of the cluster. They are running on port 7006 & 7007
 
-It will allways build the latest commit in the 3.0 branch  `https://github.com/antirez/redis`
+It will allways build the latest commit in the 3.0 branch  `https://github.com/antirez/redis/tree/3.0`
 
 
 
-## Setup / Usage
+# Setup Docker
 
 How to setup docker and start the cluster image.
 
 Install `docker` on your system. 1.0 or higher is recommended. Instructions can be found at http://docs.docker.com/en/latest/installation/. It is also reccomended to add the current user to `docker` system group to remove the need to add sudo to each docker call.
+
+
+
+# Usage
 
 Download the latest build from docker hub with `docker pull grokzen/redis-cluster`
 
