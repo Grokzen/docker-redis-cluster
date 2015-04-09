@@ -1,5 +1,5 @@
 # This tag use ubuntu 14.04
-FROM phusion/baseimage:0.9.15
+FROM phusion/baseimage:0.9.16
 
 MAINTAINER Johan Grokzen Andersson <Grokzen@gmail.com>
 
