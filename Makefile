@@ -28,7 +28,7 @@ bash:
 
 stop:
 	docker stop $(CID)
-	-make dclean
+	-make clean
 
 clean:
 	# Cleanup cidfile on disk
