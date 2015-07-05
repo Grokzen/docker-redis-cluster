@@ -24,7 +24,7 @@ Or to build the image, use either `make build` or `make rebuild`. It will be bui
 
 To start the image use `make run`. It will be started in the background. To gain access to the running image you can get a bash session by running `make bash`.
 
-Test to connect to the cluster with `redis-cli -p 7000`. If you do not want to install a redis server on your host to get access to `redis-cli` you can run a `exec` command to run it inside the docker container. It can be done with `docker exec -it <ContainerID> /redis/src/redis-cli -p 7000` where `<ContainerID>` can be found inside the CID file at `/tmp/grokzen-redis-cluster.cid` or via `docker ps`.
+Redis cli can be used with `make cli` to gain access to one of the cluster servers.
 
 
 

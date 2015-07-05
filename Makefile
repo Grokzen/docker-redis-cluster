@@ -10,6 +10,7 @@ help:
 	@echo "  run             run the built docker image"
 	@echo "  bash            starts bash inside a running container."
 	@echo "  clean           removes the tmp cid file on disk"
+	@echo "  cli             run redis-cli inside the container on the server with port 7000"
 
 build:
 	@echo "Building docker image..."
@@ -33,3 +34,6 @@ stop:
 clean:
 	# Cleanup cidfile on disk
 	-rm $(CID_FILE)
+
+cli:
+	docker exec -it $(CID) /redis/src/redis-cli -p 7000
