@@ -13,7 +13,7 @@ The cluster is 6 redis instances running with 3 master & 3 slaves, one slave for
 
 It also contains 2 standalone instances that is not part of the cluster. They are running on port 7006 & 7007
 
-It will allways build the latest commit in the 3.0 branch  `https://github.com/antirez/redis/tree/3.0`
+The image will build the tag `3.0.6` from the redis git repo.
 
 This image requires `Docker` above version 1.0
 
