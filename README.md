@@ -1,5 +1,10 @@
 # docker-redis-cluster
 
+[![Docker Stars](https://img.shields.io/docker/stars/grokzen/redis-cluster.svg)][hub]
+[![Docker Pulls](https://img.shields.io/docker/pulls/grokzen/redis-cluster.svg)][hub]
+[![Image Size](https://img.shields.io/imagelayers/image-size/grokzen/redis-cluster/latest.svg)](https://imagelayers.io/?images=grokzen/redis-cluster:latest)
+[![Image Layers](https://img.shields.io/imagelayers/layers/grokzen/redis-cluster/latest.svg)](https://imagelayers.io/?images=grokzen/redis-cluster:latest)
+
 Docker image with redis built and installed from source.
 
 The main usage for this container is to test redis cluster code. For example in https://github.com/Grokzen/redis-py-cluster repo.
