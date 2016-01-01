@@ -19,11 +19,22 @@ This image requires `Docker` above version 1.0
 
 
 
+# Available tags
+
+The following tags with pre-built images is available on `docker-hub`. They are based on the tags in this repo.
+
+- Latest  (Is the highest tag that currently exists in the redis repo [3.2-rc1 currently])
+- 3.2-rc1  (See 3.2.x branch)
+- 3.0.6  (Built from master branch)
+- 0.2.1  (Based on one of the earlier 3.0.x redis tags. Should no longer be used)
+
+
+
 # Usage
 
 If you want to use `docker-compose (fig)` please read next section.
 
-Either download the latest build from docker hub with `docker pull grokzen/redis-cluster`
+Either download the latest build from docker hub with `docker pull grokzen/redis-cluster:3.0.6` and run it with `docker run -i -t grokzen/redis-cluster:3.0.6`.
 
 Or to build the image, use either `make build` or `make rebuild`. It will be built to the image name `grokzen/redis-cluster`.
 
