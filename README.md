@@ -2,8 +2,8 @@
 
 [![Docker Stars](https://img.shields.io/docker/stars/grokzen/redis-cluster.svg)](hub])
 [![Docker Pulls](https://img.shields.io/docker/pulls/grokzen/redis-cluster.svg)](hub])
-[![Image Size](https://img.shields.io/imagelayers/image-size/grokzen/redis-cluster/latest.svg)](https://imagelayers.io/?images=grokzen/redis-cluster:latest)
-[![Image Layers](https://img.shields.io/imagelayers/layers/grokzen/redis-cluster/latest.svg)](https://imagelayers.io/?images=grokzen/redis-cluster:latest)
+[![Image Size](https://img.shields.io/imagelayers/image-size/grokzen/redis-cluster/latest.svg)](https://imagelayers.io/?images=grokzen/redis-cluster:3.2-rc1)
+[![Image Layers](https://img.shields.io/imagelayers/layers/grokzen/redis-cluster/latest.svg)](https://imagelayers.io/?images=grokzen/redis-cluster:3.2-rc1)
 
 Docker image with redis built and installed from source.
 
@@ -13,7 +13,7 @@ The cluster is 6 redis instances running with 3 master & 3 slaves, one slave for
 
 It also contains 2 standalone instances that is not part of the cluster. They are running on port 7006 & 7007
 
-The image will build the tag `3.0.6` from the redis git repo.
+This branch will contain all tags that is done in the `3.2.x` track in the `redis` git repo.
 
 This image requires `Docker` above version 1.0
 
