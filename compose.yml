@@ -1,7 +1,7 @@
 server:
   build: .
   hostname: server
-  expose:
+  ports:
     - "7000:7000"
     - "7001:7001"
     - "7002:7002"
