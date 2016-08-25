@@ -1,5 +1,11 @@
-server:
-  build: .
-  hostname: server
-  expose:
-    - "7000-7005"
+version: "2"
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VERSION: 2.3.2
+    hostname: server
+    ports:
+      - 7000-7005
