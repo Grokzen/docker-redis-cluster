@@ -31,8 +31,8 @@ RUN apt-get install -y rubygems
 # Install ruby dependencies so we can bootstrap the cluster via redis-trib.rb
 RUN gem install redis
 
-# checkout the 3.0.6 tag (Will change to 3.2 tag when it is released as stable)
-RUN git clone -b 3.0.6 https://github.com/antirez/redis.git
+# checkout the 3.2.3 tag
+RUN git clone -b 3.2.3 https://github.com/antirez/redis.git
 
 # Build redis from source
 RUN (cd /redis && make)
