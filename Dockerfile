@@ -44,9 +44,7 @@ RUN mkdir /redis-data && \
     mkdir /redis-data/7002 && \
     mkdir /redis-data/7003 && \
     mkdir /redis-data/7004 && \
-    mkdir /redis-data/7005 && \
-    mkdir /redis-data/7006 && \
-    mkdir /redis-data/7007
+    mkdir /redis-data/7005
 
 # Add all config files for all clusters
 ADD ./docker-data/redis-conf /redis-conf
@@ -58,6 +56,6 @@ ADD ./docker-data/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD ./docker-data/start.sh /start.sh
 RUN chmod 755 /start.sh
 
-EXPOSE 7000 7001 7002 7003 7004 7005 7006 7007
+EXPOSE 7000 7001 7002 7003 7004 7005
 
 CMD ["/bin/bash", "/start.sh"]
