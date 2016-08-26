@@ -1,6 +1,6 @@
 # This tag use ubuntu 14.04
 FROM phusion/baseimage:0.9.16
-ARG VERSION=2.3.2
+ARG VERSION=3.2.3
 
 # Some Environment Variables
 ENV HOME /root

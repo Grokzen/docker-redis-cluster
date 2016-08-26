@@ -1,9 +1,16 @@
 # docker-redis-cluster
 
-[![Docker Stars](https://img.shields.io/docker/stars/grokzen/redis-cluster.svg)](hub])
-[![Docker Pulls](https://img.shields.io/docker/pulls/grokzen/redis-cluster.svg)](hub])
-[![Image Size](https://img.shields.io/imagelayers/image-size/grokzen/redis-cluster/latest.svg)](https://imagelayers.io/?images=grokzen/redis-cluster:latest)
-[![Image Layers](https://img.shields.io/imagelayers/layers/grokzen/redis-cluster/latest.svg)](https://imagelayers.io/?images=grokzen/redis-cluster:latest)
+##### Quick Note
+
+This is a fork of Grokzen's [docker-redis-cluster](https://github.com/Grokzen/docker-redis-cluster) which attempts
+to strip down some unneeded config and other improvements that make it more useful for a test setup.
+
+There are few key differences between this docker config and Grokzen's, namely:
+  * Removed extra 2 standalone redis instances (ports 7006, 7007) 
+  * Advertise IP address matching `eth1` device so that clients connecting from outside with a host networking docker setup can properly redirect to other nodes in the cluster
+  * Allow redis version to be passed in as build arg
+
+# Introduction
 
 Docker image with redis built and installed from source.
 
@@ -11,46 +18,40 @@ The main usage for this container is to test redis cluster code. For example in 
 
 The cluster is 6 redis instances running with 3 master & 3 slaves, one slave for each master. They run on ports 7000 to 7005.
 
-It also contains 2 standalone instances that is not part of the cluster. They are running on port 7006 & 7007
+The image will build the tag `3.2.3` from the redis git repo unless specified otherwise.
 
-The image will build the tag `3.0.6` from the redis git repo.
-
-This image requires `Docker` above version 1.0
-
+The compose file uses v2 formatting for build arg support, so Compose 1.6.0+
+and Docker Engine 1.10.0+ is required.
 
 
 # Available tags
 
 The following tags with pre-built images is available on `docker-hub`. They are based on the tags in this repo.
 
-- Latest  (Is the highest tag that currently exists in the redis repo [3.2-rc1 currently])
-- 3.2-rc1  (See 3.2.x branch)
-- 3.0.6  (Built from master branch)
-- 0.2.1  (Based on one of the earlier 3.0.x redis tags. Should no longer be used)
+  * Latest  (Is the highest tag that currently exists in the redis repo [3.2.3 currently])
+  * 3.2.3 (Currently the same as 'Latest')
 
 
+# Build (optional)
 
-# Usage
+To build the image, `docker-compose -f compose.yml build`. By default, this will use redis 3.2.3 and will not tag the resulting image.
 
-If you want to use `docker-compose (fig)` please read next section.
+To specify an alternate redis version (and with optional tagging):
 
-Either download the latest build from docker hub with `docker pull grokzen/redis-cluster:3.0.6` and run it with `docker run -i -t grokzen/redis-cluster:3.0.6`.
+```
+docker build --build-arg VERSION=3.2.2 -t <user>/redis-cluster:3.2.2 .
+```
 
-Or to build the image, use either `make build` or `make rebuild`. It will be built to the image name `grokzen/redis-cluster`.
-
-To start the image use `make run`. It will be started in the background. To gain access to the running image you can get a bash session by running `make bash`.
-
-Redis cli can be used with `make cli` to gain access to one of the cluster servers.
-
+Start the image after building with `docker-compose -f compose.yml up`. Add `-d` to run the server in background/detached mode.
 
 
-# Docker compose (fig)
+# Run
 
-This image contains a `compose.yml` file that can be used with `docker-compose (fig)` to run the image. Docker compose is simpler to use then the old `Makefile`.
-
-Build the image with `docker-compose -f compose.yml build`.
-
-Start the image after building with `docker-compose -f compose.yml up`. Add `-d` to run the server in background/detatched mode.
+You have a few options for running the image:
+  * If you skipped building, download the latest build from docker hub with `docker pull druotic/redis-cluster:3.2.3` and run it with `docker run -i -t druotic/redis-cluster:3.2.3`.
+  * If built using docker-compose, run `docker-compose -f compose.yml up`
+  * If build using docker, run `docker run <user>/redis-cluster:3.2.2`
+  * 
 
 
 
