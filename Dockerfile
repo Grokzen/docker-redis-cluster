@@ -55,6 +55,4 @@ ADD ./docker-data/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD ./docker-data/start.sh /start.sh
 RUN chmod 755 /start.sh
 
-EXPOSE 7000 7001 7002 7003 7004 7005
-
 CMD ["/bin/bash", "/start.sh"]

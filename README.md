@@ -5,7 +5,7 @@
 This is a fork of Grokzen's [docker-redis-cluster](https://github.com/Grokzen/docker-redis-cluster) which attempts
 to strip down some unneeded config and other improvements that make it more useful for a test setup.
 
-There are few key differences between this docker config and Grokzen's, namely:
+There are a few key differences between this docker config and Grokzen's, namely:
   * Removed extra 2 standalone redis instances (ports 7006, 7007) 
   * Advertise IP address matching `eth1` device so that clients connecting from outside with a host networking docker setup can properly redirect to other nodes in the cluster
   * Allow redis version to be passed in as build arg
@@ -14,7 +14,7 @@ There are few key differences between this docker config and Grokzen's, namely:
 
 Docker image with redis built and installed from source.
 
-The main usage for this container is to test redis cluster code. For example in https://github.com/Grokzen/redis-py-cluster repo.
+The main usage for this container is to test redis cluster code.
 
 The cluster is 6 redis instances running with 3 master & 3 slaves, one slave for each master. They run on ports 7000 to 7005.
 
@@ -39,20 +39,15 @@ To build the image, `docker-compose -f compose.yml build`. By default, this will
 To specify an alternate redis version (and with optional tagging):
 
 ```
-docker build --build-arg VERSION=3.2.2 -t <user>/redis-cluster:3.2.2 .
+docker build --build-arg redis_version=3.2.2 -t <user>/redis-cluster:3.2.2 .
 ```
-
-Start the image after building with `docker-compose -f compose.yml up`. Add `-d` to run the server in background/detached mode.
-
 
 # Run
 
 You have a few options for running the image:
-  * If you skipped building, download the latest build from docker hub with `docker pull druotic/redis-cluster:3.2.3` and run it with `docker run -i -t druotic/redis-cluster:3.2.3`.
+  * If you skipped building, download the latest build from docker hub with `docker pull druotic/redis-cluster` and run it with `docker run -it --net=host druotic/redis-cluster`
   * If built using docker-compose, run `docker-compose -f compose.yml up`
-  * If build using docker, run `docker run <user>/redis-cluster:3.2.2`
-  * 
-
+  * If built using docker, run `docker run -it --net=host <user>/redis-cluster:<version>`
 
 
 # Known Issues

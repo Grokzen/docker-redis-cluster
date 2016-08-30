@@ -6,7 +6,4 @@ services:
       args:
         redis_version: 3.2.3
       dockerfile: Dockerfile
-    hostname: server
-    expose:
-      - 7000-7005
     network_mode: host
