@@ -1,7 +1,6 @@
 # This tag use ubuntu 14.04
 FROM phusion/baseimage:0.9.16
-
-MAINTAINER Johan Andersson <Grokzen@gmail.com>
+ARG redis_version=3.2.3
 
 # Some Environment Variables
 ENV HOME /root
@@ -31,8 +30,8 @@ RUN apt-get install -y rubygems
 # Install ruby dependencies so we can bootstrap the cluster via redis-trib.rb
 RUN gem install redis
 
-# checkout the 3.0.6 tag (Will change to 3.2 tag when it is released as stable)
-RUN git clone -b 3.0.6 https://github.com/antirez/redis.git
+# checkout the version tag
+RUN git clone -b "$redis_version" https://github.com/antirez/redis.git
 
 # Build redis from source
 RUN (cd /redis && make)
@@ -44,9 +43,7 @@ RUN mkdir /redis-data && \
     mkdir /redis-data/7002 && \
     mkdir /redis-data/7003 && \
     mkdir /redis-data/7004 && \
-    mkdir /redis-data/7005 && \
-    mkdir /redis-data/7006 && \
-    mkdir /redis-data/7007
+    mkdir /redis-data/7005
 
 # Add all config files for all clusters
 ADD ./docker-data/redis-conf /redis-conf
@@ -57,7 +54,5 @@ ADD ./docker-data/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Add startup script
 ADD ./docker-data/start.sh /start.sh
 RUN chmod 755 /start.sh
-
-EXPOSE 7000 7001 7002 7003 7004 7005 7006 7007
 
 CMD ["/bin/bash", "/start.sh"]

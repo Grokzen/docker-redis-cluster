@@ -1,12 +1,9 @@
-server:
-  build: .
-  hostname: server
-  expose:
-    - "7000:7000"
-    - "7001:7001"
-    - "7002:7002"
-    - "7003:7003"
-    - "7004:7004"
-    - "7005:7005"
-    - "7006:7006"
-    - "7007:7007"
+version: "2"
+services:
+  server:
+    build:
+      context: .
+      args:
+        redis_version: 3.2.3
+      dockerfile: Dockerfile
+    network_mode: host
