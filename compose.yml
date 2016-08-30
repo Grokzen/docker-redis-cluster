@@ -3,9 +3,9 @@ services:
   server:
     build:
       context: .
-      dockerfile: Dockerfile
       args:
-        VERSION: 3.2.3
+        redis_version: 3.2.3
+      dockerfile: Dockerfile
     hostname: server
     expose:
       - 7000-7005

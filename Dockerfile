@@ -1,6 +1,6 @@
 # This tag use ubuntu 14.04
 FROM phusion/baseimage:0.9.16
-ARG VERSION=3.2.3
+ARG redis_version=3.2.3
 
 # Some Environment Variables
 ENV HOME /root
@@ -31,7 +31,7 @@ RUN apt-get install -y rubygems
 RUN gem install redis
 
 # checkout the version tag
-RUN git clone -b $VERSION https://github.com/antirez/redis.git
+RUN git clone -b "$redis_version" https://github.com/antirez/redis.git
 
 # Build redis from source
 RUN (cd /redis && make)
