@@ -4,6 +4,10 @@ if [ "$1" = 'redis-cluster' ]; then
     for port in `seq 7000 7007`; do
       mkdir -p /redis-conf/${port}
       mkdir -p /redis-data/${port}
+
+      if [ -e /redis-data/${port}/nodes.conf ]; then
+        rm /redis-data/${port}/nodes.conf
+      fi
     done
 
     for port in `seq 7000 7005`; do
