@@ -37,3 +37,12 @@ clean:
 
 cli:
 	docker exec -it $(CID) /redis/src/redis-cli -p 7000
+
+compose-build:
+	docker-compose -f docker-compose.yml build
+
+compose-up:
+	docker-compose -f docker-compose.yml up
+
+copmose-stop:
+	docker-compose -f docker-compose.yml stop

@@ -13,9 +13,7 @@ The cluster is 6 redis instances running with 3 master & 3 slaves, one slave for
 
 It also contains 2 standalone instances that is not part of the cluster. They are running on port 7006 & 7007
 
-The image will build the tag `3.0.6` from the redis git repo.
-
-This image requires `Docker` above version 1.0
+This image requires at least `Docker` version 1.10 but the latest version is recommended.
 
 
 
@@ -23,37 +21,109 @@ This image requires `Docker` above version 1.0
 
 The following tags with pre-built images is available on `docker-hub`. They are based on the tags in this repo.
 
-- Latest  (Is the highest tag that currently exists in the redis repo [3.2-rc1 currently])
-- 3.2-rc1  (See 3.2.x branch)
-- 3.0.6  (Built from master branch)
-- 0.2.1  (Based on one of the earlier 3.0.x redis tags. Should no longer be used)
+- latest == 3.2.7
+
+Redis 3.2.x versions:
+
+- 3.2.7
+- 3.2.6
+- 3.2.5
+- 3.2.4
+- 3.2.3
+- 3.2.2
+- 3.2.1
+- 3.2.0
+- 3.2-rc1
+
+Redis 3.0.x versions:
+
+- 3.0.7
+- 3.0.6
+- 3.0.5
+- 3.0.4
+- 3.0.3
+- 3.0.2
+- 3.0.1
+- 3.0.0
 
 
 
 # Usage
 
-If you want to use `docker-compose (fig)` please read next section.
-
-Either download the latest build from docker hub with `docker pull grokzen/redis-cluster:3.0.6` and run it with `docker run -i -t grokzen/redis-cluster:3.0.6`.
-
-Or to build the image, use either `make build` or `make rebuild`. It will be built to the image name `grokzen/redis-cluster`.
-
-To start the image use `make run`. It will be started in the background. To gain access to the running image you can get a bash session by running `make bash`.
-
-Redis cli can be used with `make cli` to gain access to one of the cluster servers.
+There is 2 primary ways of buliding and running this container
 
 
+## docker build
 
-# Docker compose (fig)
+To build your own image run:
 
-This image contains a `compose.yml` file that can be used with `docker-compose (fig)` to run the image. Docker compose is simpler to use then the old `Makefile`.
+    docker build -t <username>/redis-cluster .
 
-Build the image with `docker-compose -f compose.yml build`.
+    # or
 
-Start the image after building with `docker-compose -f compose.yml up`. Add `-d` to run the server in background/detatched mode.
+    make build
+
+And to run the container use:
+
+    docker run -i -t -p 7000:7000 -p 7001:7001 -p 7002:7002 -p 7003:7003 -p 7004:7004 -p 7005:7005 -p 7006:7006 -p 7007:7007
+
+    # or
+
+    make run
+
+    # and top stop the container run
+
+    make stop
+
+To connect to your cluster you can use the redis-cli tool:
+
+    redis-cli -c -p 7000
 
 
+## docker compose
 
-# Known Issues
+It is also possible to build the container using docker-compose. The advantage with a compose build is that it simplifies container management.
 
-If you get a error when rebuilding the image that docker can't do dns lookup on `archive.ubuntu.com` then you need to modify docker to use google IPv4 DNS lookups. Read the following link http://dannytsang.co.uk/docker-on-digitalocean-cannot-resolve-hostnames/ and uncomment the line in `/etc/default/docker` and restart your docker daemon and it should be fixed.
+To build the container run:
+
+    docker-compose -f docker-compose.yml build
+
+    # or
+
+    make compose-build
+
+To start the container run:
+
+    docker-compose -f docker-compose.yml up
+
+    # or
+
+    make compose-up
+
+    # and to stpo the container run
+
+    make compose-stop
+
+To connection to your cluster you can run redis-cli tool:
+
+    redis-cli -c -p 7000
+
+
+## Build alternative redis versions
+
+For a release to be buildable it needs to be present at this url: http://download.redis.io/releases/
+
+
+### docker build
+
+To set a different redis version use the argument --build-arg
+
+    # Example
+    docker build --build-arg redis_version=3.2.0 -t grokzen/redis-cluster .
+
+
+### docker-compose
+
+To set a different redis version you must change the variable 'redis_version' inside the docker-compose file.
+
+Then you simply rebuild the compose file and it should be updated with the desired redis version.
