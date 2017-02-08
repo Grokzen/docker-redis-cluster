@@ -2,8 +2,6 @@
 
 [![Docker Stars](https://img.shields.io/docker/stars/grokzen/redis-cluster.svg)](hub])
 [![Docker Pulls](https://img.shields.io/docker/pulls/grokzen/redis-cluster.svg)](hub])
-[![Image Size](https://img.shields.io/imagelayers/image-size/grokzen/redis-cluster/latest.svg)](https://imagelayers.io/?images=grokzen/redis-cluster:latest)
-[![Image Layers](https://img.shields.io/imagelayers/layers/grokzen/redis-cluster/latest.svg)](https://imagelayers.io/?images=grokzen/redis-cluster:latest)
 
 Docker image with redis built and installed from source.
 
@@ -19,7 +17,7 @@ This image requires at least `Docker` version 1.10 but the latest version is rec
 
 # Available tags
 
-The following tags with pre-built images is available on `docker-hub`. They are based on the tags in this repo.
+The following tags with pre-built images is available on `docker-hub`.
 
 - latest == 3.2.7
 
