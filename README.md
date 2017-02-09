@@ -21,6 +21,8 @@ The following tags with pre-built images is available on `docker-hub`.
 
 - latest == 3.2.7
 
+For redis 4.0 versions please see the branch 'redis-4.0'
+
 Redis 3.2.x versions:
 
 - 3.2.7
