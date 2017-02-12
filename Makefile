@@ -11,6 +11,11 @@ help:
 	@echo "  bash            starts bash inside a running container."
 	@echo "  clean           removes the tmp cid file on disk"
 	@echo "  cli             run redis-cli inside the container on the server with port 7000"
+	@echo " ---------"
+	@echo "Docker compose commands"
+	@echo "  compose-build   builds docker-compose containers"
+	@echo "  compose-up      starts docker-compose containers"
+	@echo "  compose-stop    stops the running docker-compose containers"
 
 build:
 	@echo "Building docker image..."
