@@ -1,48 +1,30 @@
-FROM redis:3.2
+FROM redis:3.2.8-alpine
 
-MAINTAINER Johan Andersson <Grokzen@gmail.com>
+MAINTAINER Vitaly Aminev <v@makeomatic.ca>
 
-# Some Environment Variables
-ENV HOME /root
-ENV DEBIAN_FRONTEND noninteractive
+RUN \
+  apk --no-cache add \
+    ruby \
+    supervisor \
+    tcl \
+  	gettext \
+    git
 
-# Install system dependencies
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -yqq \
-      net-tools supervisor ruby rubygems locales gettext-base && \
-    apt-get clean -yqq
-
-# # Ensure UTF-8 lang and locale
-RUN locale-gen en_US.UTF-8
-ENV LANG       en_US.UTF-8
-ENV LC_ALL     en_US.UTF-8
-
-RUN gem install redis
-
-RUN apt-get install -y gcc make g++ build-essential libc6-dev tcl git supervisor ruby
-
-ARG redis_version=3.2.7
-
-RUN wget -qO redis.tar.gz http://download.redis.io/releases/redis-${redis_version}.tar.gz \
-    && tar xfz redis.tar.gz -C / \
-    && mv /redis-$redis_version /redis
-
-RUN (cd /redis && make)
-
-RUN mkdir /redis-conf
-RUN mkdir /redis-data
+RUN gem install --no-rdoc --no-ri redis \
+  && mkdir /redis-conf \
+  && mkdir /redis-data \
+  && wget -O /redis-trib.rb http://download.redis.io/redis-stable/src/redis-trib.rb
 
 COPY ./docker-data/redis-cluster.tmpl /redis-conf/redis-cluster.tmpl
 COPY ./docker-data/redis.tmpl /redis-conf/redis.tmpl
 
 # Add supervisord configuration
-COPY ./docker-data/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./docker-data/supervisord.conf /etc/supervisor/supervisord.conf
 
 # Add startup script
 COPY ./docker-data/docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod 755 /docker-entrypoint.sh
 
-EXPOSE 7000 7001 7002 7003 7004 7005 7006 7007
+EXPOSE 7000 7001 7002
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["redis-cluster"]

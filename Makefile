@@ -1,7 +1,7 @@
-CID_FILE = /tmp/grokzen-redis-cluster.cid
+CID_FILE = /tmp/makeomatic-redis-cluster.cid
 CID =`cat $(CID_FILE)`
-IMAGE_NAME = grokzen/redis-cluster
-PORTS = -p 7000:7000 -p 7001:7001 -p 7002:7002 -p 7003:7003 -p 7004:7004 -p 7005:7005 -p 7006:7006 -p 7007:7007
+IMAGE_NAME = makeomatic/redis-cluster
+PORTS = -p 7000:7000 -p 7001:7001 -p 7002:7002
 
 help:
 	@echo "Please use 'make <target>' where <target> is one of"
@@ -41,7 +41,7 @@ clean:
 	-rm $(CID_FILE)
 
 cli:
-	docker exec -it $(CID) /redis/src/redis-cli -p 7000
+	docker exec -it $(CID) redis-cli -p 7000
 
 compose-build:
 	docker-compose -f docker-compose.yml build
