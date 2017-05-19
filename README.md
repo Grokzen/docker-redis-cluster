@@ -50,7 +50,7 @@ Redis 3.0.x versions:
 
 # Usage
 
-There is 2 primary ways of buliding and running this container
+There is 2 primary ways of building and running this container
 
 
 ## docker build
@@ -107,6 +107,28 @@ To start the container run:
 To connection to your cluster you can run redis-cli tool:
 
     redis-cli -c -p 7000
+
+
+## Omit standalone redis instances
+
+Set env variable CLUSTER_ONLY=true.
+
+* Running with docker compose, modify docker-compose file
+
+      version: '2'
+      services:
+        redis-cluster:
+          build:
+            context: .
+            args:
+              redis_version: '3.2.7'
+          hostname: server
+        environment:
+          CLUSTER_ONLY: 'true'
+
+* Running with docker directly:
+
+      docker run -i -t -p 7000:7000 -p 7001:7001 -p 7002:7002 -p 7003:7003 -p 7004:7004 -p 7005:7005 -e CLUSTER_ONLY=true <image name/id>
 
 
 ## Build alternative redis versions
