@@ -19,12 +19,13 @@ This image requires at least `Docker` version 1.10 but the latest version is rec
 
 The following tags with pre-built images is available on `docker-hub`.
 
-- latest == 3.2.7
+- latest == 3.2.8
 
 For redis 4.0 versions please see the branch 'redis-4.0'
 
 Redis 3.2.x versions:
 
+- 3.2.8
 - 3.2.7
 - 3.2.6
 - 3.2.5
