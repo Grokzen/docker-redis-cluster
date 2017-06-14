@@ -9,7 +9,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # Install system dependencies
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -yqq \
-      net-tools supervisor ruby rubygems locales gettext-base && \
+      net-tools supervisor ruby rubygems locales gettext-base wget && \
     apt-get clean -yqq
 
 # # Ensure UTF-8 lang and locale
