@@ -129,3 +129,10 @@ To set a different redis version use the argument --build-arg
 To set a different redis version you must change the variable 'redis_version' inside the docker-compose file.
 
 Then you simply rebuild the compose file and it should be updated with the desired redis version.
+
+
+# License
+
+This repo is using the MIT LICENSE.
+
+You can find it in the file [LICENSE](LICENSE)
