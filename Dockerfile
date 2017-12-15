@@ -19,7 +19,7 @@ ENV LC_ALL     en_US.UTF-8
 
 RUN gem install redis -v 3.3.3
 
-RUN apt-get install -y gcc make g++ build-essential libc6-dev tcl git supervisor ruby
+RUN apt-get install -y gcc make g++ build-essential libc6-dev tcl git supervisor ruby wget
 
 ARG redis_version=3.2.9
 
