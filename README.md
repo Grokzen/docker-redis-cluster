@@ -37,52 +37,6 @@ docker run grokzen/redis-cluster:latest -e "IP=0.0.0.0" ...
 ```
 
 
-# Available tags
-
-The following tags with pre-built images is available on `docker-hub`.
-
-- latest == 4.0.9
-
-Redis 4.0.x versions:
-
-- 4.0.9
-- 4.0.8
-- 4.0.7
-- 4.0.6
-- 4.0.5
-- 4.0.4
-- 4.0.3
-- 4.0.2
-- 4.0.1
-- 4.0.0
-
-Redis 3.2.x versions:
-
-- 3.2.11
-- 3.2.10
-- 3.2.9
-- 3.2.8
-- 3.2.7
-- 3.2.6
-- 3.2.5
-- 3.2.4
-- 3.2.3
-- 3.2.2
-- 3.2.1
-- 3.2.0
-
-Redis 3.0.x versions:
-
-- 3.0.7
-- 3.0.6
-- 3.0.5
-- 3.0.4
-- 3.0.3
-- 3.0.2
-- 3.0.1
-- 3.0.0
-
-
 
 # Usage
 
@@ -147,6 +101,52 @@ To set a different redis version use the argument --build-arg
 To set a different redis version you must change the variable 'redis_version' inside the docker-compose file.
 
 Then you simply rebuild the compose file and it should be updated with the desired redis version.
+
+
+# Available tags
+
+The following tags with pre-built images is available on `docker-hub`.
+
+- latest == 4.0.9
+
+Redis 4.0.x versions:
+
+- 4.0.9
+- 4.0.8
+- 4.0.7
+- 4.0.6
+- 4.0.5
+- 4.0.4
+- 4.0.3
+- 4.0.2
+- 4.0.1
+- 4.0.0
+
+Redis 3.2.x versions:
+
+- 3.2.11
+- 3.2.10
+- 3.2.9
+- 3.2.8
+- 3.2.7
+- 3.2.6
+- 3.2.5
+- 3.2.4
+- 3.2.3
+- 3.2.2
+- 3.2.1
+- 3.2.0
+
+Redis 3.0.x versions:
+
+- 3.0.7
+- 3.0.6
+- 3.0.5
+- 3.0.4
+- 3.0.3
+- 3.0.2
+- 3.0.1
+- 3.0.0
 
 
 # License
