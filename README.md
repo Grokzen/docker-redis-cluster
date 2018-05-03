@@ -16,6 +16,25 @@ This image requires at least `Docker` version 1.10 but the latest version is rec
 Update 2018-03-06: All images/tags on dockerhub has been rebuilt with the latest code and re-uploaded to dockerhub.
 
 
+# Note for Mac users
+
+If you are using this container to run a redis cluster on your mac computer, then you need to configure the container to use another IP address for cluster discovery as it can't use the default discovery IP that is hardcoded into the container.
+
+If you are using the docker-compose file to build the container, then you must export a envrionment variable on your machine before building the container.
+
+```
+# This will make redis do cluster discovery and bind all nodes to ip 127.0.0.1 internally
+
+export REDIS_CLUSTER_IP=0.0.0.0
+```
+
+If you are downloading the container from dockerhub, you must add the internal IP envrionment variable to your `docker run` command.
+
+```
+docker run grokzen/redis-cluster:latest -e "IP=0.0.0.0" ...
+```
+
+
 # Available tags
 
 The following tags with pre-built images is available on `docker-hub`.
