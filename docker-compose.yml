@@ -1,6 +1,8 @@
 version: '2'
 services:
   redis-cluster:
+    environment:
+     IP: ${REDIS_CLUSTER_IP}
     build:
       context: .
       args:
