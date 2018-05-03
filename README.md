@@ -84,63 +84,25 @@ Redis 3.0.x versions:
 
 # Usage
 
-There is 2 primary ways of building and running this container
-
-
-## docker build
-
 To build your own image run:
-
-    docker build -t <username>/redis-cluster .
-
-    # or
 
     make build
 
 And to run the container use:
 
-    docker run -i -t -p 7000:7000 -p 7001:7001 -p 7002:7002 -p 7003:7003 -p 7004:7004 -p 7005:7005 -p 7006:7006 -p 7007:7007
-
-    # or
-
-    make run
+    make up
 
     # and top stop the container run
 
-    make stop
+    make down
 
 To connect to your cluster you can use the redis-cli tool:
 
     redis-cli -c -p 7000
 
+    # or the built redis-cli tool inside the container
 
-## docker compose
-
-It is also possible to build the container using docker-compose. The advantage with a compose build is that it simplifies container management.
-
-To build the container run:
-
-    docker-compose -f docker-compose.yml build
-
-    # or
-
-    make compose-build
-
-To start the container run:
-
-    docker-compose -f docker-compose.yml up
-
-    # or
-
-    make compose-up
-
-    # and to stpo the container run
-
-    make compose-stop
-
-To connection to your cluster you can run redis-cli tool:
-
-    redis-cli -c -p 7000
+    make cli
 
 
 ## Omit standalone redis instances
@@ -155,14 +117,14 @@ Set env variable CLUSTER_ONLY=true.
           build:
             context: .
             args:
-              redis_version: '3.2.7'
+              redis_version: '4.0.9'
           hostname: server
         environment:
           CLUSTER_ONLY: 'true'
 
-* Running with docker directly:
+* Running with docker directly add:
 
-      docker run -i -t -p 7000:7000 -p 7001:7001 -p 7002:7002 -p 7003:7003 -p 7004:7004 -p 7005:7005 -e CLUSTER_ONLY=true <image name/id>
+      docker run ... -e CLUSTER_ONLY=true ...
 
 
 ## Build alternative redis versions
