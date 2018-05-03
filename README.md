@@ -20,10 +20,11 @@ Update 2018-03-06: All images/tags on dockerhub has been rebuilt with the latest
 
 The following tags with pre-built images is available on `docker-hub`.
 
-- latest == 4.0.8
+- latest == 4.0.9
 
 Redis 4.0.x versions:
 
+- 4.0.9
 - 4.0.8
 - 4.0.7
 - 4.0.6
