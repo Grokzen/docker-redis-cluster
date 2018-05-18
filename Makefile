@@ -128,3 +128,4 @@ push-releases:
 	docker push grokzen/redis-cluster:4.0.7
 	docker push grokzen/redis-cluster:4.0.8
 	docker push grokzen/redis-cluster:4.0.9
+	docker push grokzen/redis-cluster:latest
