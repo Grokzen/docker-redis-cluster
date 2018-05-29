@@ -26,7 +26,7 @@ RUN apt-get install -y gcc make g++ build-essential libc6-dev tcl git supervisor
 
 ARG redis_version=4.0.9
 
-RUN wget -qO redis.tar.gz http://download.redis.io/releases/redis-${redis_version}.tar.gz \
+RUN wget -qO redis.tar.gz https://github.com/antirez/redis/archive/${redis_version}.tar.gz \
     && tar xfz redis.tar.gz -C / \
     && mv /redis-$redis_version /redis
 
