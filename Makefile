@@ -11,6 +11,7 @@ help:
 	@echo "  build-3.0"
 	@echo "  build-3.2"
 	@echo "  build-4.0"
+	@echo "  build-5.0"
 	@echo "  push-releases"
 
 build:
@@ -96,6 +97,10 @@ build-4.0:
 	docker tag grokzen/redis-cluster grokzen/redis-cluster:4.0.8
 	docker build --build-arg redis_version=4.0.9 -t grokzen/redis-cluster .
 	docker tag grokzen/redis-cluster grokzen/redis-cluster:4.0.9
+
+build-5.0:
+	docker build --build-arg redis_version=5.0-rc1 -t grokzen/redis-cluster .
+	docker tag grokzen/redis-cluster grokzen/redis-cluster:5.0-rc1
 
 push-releases:
 	docker push grokzen/redis-cluster:3.0.0
