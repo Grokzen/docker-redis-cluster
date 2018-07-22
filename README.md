@@ -113,10 +113,13 @@ Latest release in the most recent stable branch will be used as `latest` version
 
 Redis 5.0.x version:
 
+- 5.0-rc3
+- 5.0-rc2
 - 5.0-rc1
 
 Redis 4.0.x versions:
 
+- 4.0.10
 - 4.0.9
 - 4.0.8
 - 4.0.7
@@ -130,6 +133,7 @@ Redis 4.0.x versions:
 
 Redis 3.2.x versions:
 
+- 3.2.12
 - 3.2.11
 - 3.2.10
 - 3.2.9
