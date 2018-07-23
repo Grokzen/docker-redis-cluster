@@ -73,7 +73,7 @@ Set env variable CLUSTER_ONLY=true.
           build:
             context: .
             args:
-              redis_version: '4.0.9'
+              redis_version: '4.0.10'
           hostname: server
         environment:
           CLUSTER_ONLY: 'true'
@@ -109,7 +109,7 @@ The following tags with pre-built images is available on `docker-hub`.
 
 Latest release in the most recent stable branch will be used as `latest` version.
 
-- latest == 4.0.9
+- latest == 4.0.10
 
 Redis 5.0.x version:
 
