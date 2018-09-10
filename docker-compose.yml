@@ -3,6 +3,7 @@ services:
   redis-cluster:
     environment:
      IP: ${REDIS_CLUSTER_IP}
+     SENTINEL: ${REDIS_USE_SENTINEL}
     build:
       context: .
       args:
@@ -10,3 +11,4 @@ services:
     hostname: server
     ports:
       - '7000-7007:7000-7007'
+      - '5000-5002:5000-5002'
