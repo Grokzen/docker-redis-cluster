@@ -82,7 +82,7 @@ build-3.2:
 	docker tag grokzen/redis-cluster grokzen/redis-cluster:3.2.10
 	docker build --build-arg redis_version=3.2.11 -t grokzen/redis-cluster .
 	docker tag grokzen/redis-cluster grokzen/redis-cluster:3.2.11
-	docker build --build-arg redis_version=3.2.12 -t grokzen/redis-cluster 
+	docker build --build-arg redis_version=3.2.12 -t grokzen/redis-cluster .
 	docker tag grokzen/redis-cluster grokzen/redis-cluster:3.2.12
 
 build-4.0:
