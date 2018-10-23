@@ -8,7 +8,7 @@ services:
     build:
       context: .
       args:
-        redis_version: '4.0.11'
+        redis_version: '5.0.0'
     hostname: server
     ports:
       - '7000-7007:7000-7007'
