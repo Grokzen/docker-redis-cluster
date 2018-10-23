@@ -4,9 +4,9 @@ if [ "$1" = 'redis-cluster' ]; then
     # Allow passing in cluster IP by argument or environmental variable
     IP="${2:-$IP}"
 
-    max_port=7007
-    if [ "$CLUSTER_ONLY" = "true" ]; then
-      max_port=7005
+    max_port=7005
+    if [ "$STANDALONE" = "true" ]; then
+      max_port=7007
     fi
 
     for port in `seq 7000 $max_port`; do
