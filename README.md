@@ -63,35 +63,38 @@ To connect to your cluster you can use the redis-cli tool:
     make cli
 
 
-## Omit standalone redis instances
+## Include standalone redis instances
 
-Set env variable CLUSTER_ONLY=true.
+Standalone instances is not enabled by default, but available to use to run 2 standalone redis instances that is not clustered.
 
-* Running with docker compose, modify docker-compose file
+If running with plain docker run
+
+    docker run ... -e STANDALONE=true ...
+
+When running with docker-compose, set the envrionment variable on your system `REDIS_USE_STANDALONE=true` and start your container or modify the `docker-compose.yml` file
 
       version: '2'
       services:
         redis-cluster:
-          build:
-            context: .
-            args:
-              redis_version: '4.0.11'
-          hostname: server
+          ...
         environment:
-          CLUSTER_ONLY: 'true'
-
-* Running with docker directly add:
-
-      docker run ... -e CLUSTER_ONLY=true ...
+          STANDALONE: 'true'
 
 
 ## Include sentinel instances
 
 Sentinel instances is not enabled by default.
 
+If running with plain docker send in `-e SENTINEL=true`.
+
 When running with docker-compose set the environment variable on your system `REDIS_USE_SENTINEL=true` and start your container.
 
-If running with plain docker send in `-e SENTINEL=true`.
+      version: '2'
+      services:
+        redis-cluster:
+          ...
+        environment:
+          SENTINEL: 'true'
 
 
 ## Build alternative redis versions
