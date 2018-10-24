@@ -11,13 +11,13 @@ The main usage for this container is to test redis cluster code. For example in 
 
 The cluster is 6 redis instances running with 3 master & 3 slaves, one slave for each master. They run on ports 7000 to 7005.
 
+If the flag `-e "STANDALONE=true"` is passed there is 2 standalone instances runnin on port 7006 and 7007.
+
 If the flag `-e "SENTINEL=true"` is passed there are 3 Sentinel nodes running on ports 5000 to 5002 matching cluster's master instances.
 
-It also contains 2 standalone instances that is not part of the cluster. They are running on port 7006 & 7007
 
 This image requires at least `Docker` version 1.10 but the latest version is recommended.
 
-Update 2018-03-06: All images/tags on dockerhub has been rebuilt with the latest code and re-uploaded to dockerhub.
 
 
 # Note for Mac users
