@@ -1,7 +1,7 @@
 # Build from commits based on redis:3.2
 FROM redis@sha256:7b0a40301bc1567205e6461c5bf94c38e1e1ad0169709e49132cafc47f6b51f3
 
-MAINTAINER Johan Andersson <Grokzen@gmail.com>
+LABEL maintainer="Johan Andersson <Grokzen@gmail.com>"
 
 # Some Environment Variables
 ENV HOME /root
