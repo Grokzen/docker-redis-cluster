@@ -104,17 +104,19 @@ For a release to be buildable it needs to be present at this url: http://downloa
 
 ### docker build
 
-To set a different redis version use the argument --build-arg
+To build a different redis version use the argument `--build-arg` argument.
 
-    # Example
-    docker build --build-arg redis_version=3.2.0 -t grokzen/redis-cluster .
+    # Example plain docker
+    docker build --build-arg redis_version=4.0.11 -t grokzen/redis-cluster .
 
 
 ### docker-compose
 
-To set a different redis version you must change the variable 'redis_version' inside the docker-compose file.
+To build a different redis version use the `--build-arg` argument.
 
-Then you simply rebuild the compose file and it should be updated with the desired redis version.
+    # Example docker-compose
+    docker-compose build --build-arg "redis_version=4.0.11" redis-cluster
+
 
 
 # Available tags
@@ -123,11 +125,11 @@ The following tags with pre-built images is available on `docker-hub`.
 
 Latest release in the most recent stable branch will be used as `latest` version.
 
-- latest == 4.0.11
+- latest == 5.0.0
 
 Redis 5.0.x version:
 
-- 5.0.0 currently has broken redis-cli. When fixed will add back 5.0.0
+- 5.0.0
 
 Redis 4.0.x versions:
 
