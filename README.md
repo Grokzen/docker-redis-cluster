@@ -5,9 +5,16 @@
 
 Docker hub: https://hub.docker.com/r/grokzen/redis-cluster/
 
-Docker image with redis built and installed from source.
+Docker image with redis built and installed from source and a cluster is built.
 
-The main usage for this container is to test redis cluster code. For example in https://github.com/Grokzen/redis-py-cluster repo.
+The main primary use for this container is to test redis cluster code. Specially https://github.com/Grokzen/redis-py-cluster
+
+This repo is not intended to be a production quality docker build. It will also not be changed to use multiple containers or move away from supervisord, or to have support for different cluster managers, for example kubernetes, docker-ee or swarm. It will also not be made to handle persistent data between runs. However, any suggestions on improvements will be considered. 
+
+The container is make to be quick and easy to start, use and run.
+
+
+## Redis instances inside the container
 
 The cluster is 6 redis instances running with 3 master & 3 slaves, one slave for each master. They run on ports 7000 to 7005.
 
@@ -20,7 +27,7 @@ This image requires at least `Docker` version 1.10 but the latest version is rec
 
 
 
-# Note for Mac users
+# Important for Mac users
 
 If you are using this container to run a redis cluster on your mac computer, then you need to configure the container to use another IP address for cluster discovery as it can't use the default discovery IP that is hardcoded into the container.
 
@@ -46,11 +53,11 @@ To build your own image run:
 
     make build
 
-And to run the container use:
+To run the container run:
 
     make up
 
-    # and top stop the container run
+To stop the container run:
 
     make down
 
@@ -58,7 +65,7 @@ To connect to your cluster you can use the redis-cli tool:
 
     redis-cli -c -p 7000
 
-    # or the built redis-cli tool inside the container
+Or the built redis-cli tool inside the container that will connect to the cluster inside the container
 
     make cli
 
