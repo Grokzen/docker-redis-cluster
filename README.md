@@ -11,7 +11,7 @@ The main primary use for this container is to test redis cluster code. Specially
 
 This repo is not intended to be a production quality docker build. It will also not be changed to use multiple containers or move away from supervisord, or to have support for different cluster managers, for example kubernetes, docker-ee or swarm. It will also not be made to handle persistent data between runs. However, any suggestions on improvements will be considered. 
 
-The container is make to be quick and easy to start, use and run.
+The container is made to be quick and easy to start, use and run.
 
 
 ## Redis instances inside the container
