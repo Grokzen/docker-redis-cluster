@@ -25,7 +25,7 @@ RUN gem install redis -v 4.0.2
 
 RUN apt-get install -y gcc make g++ build-essential libc6-dev tcl git supervisor ruby
 
-ARG redis_version=5.0.2
+ARG redis_version=5.0.3
 
 RUN echo $redis_version > /redis-version.txt
 
