@@ -17,6 +17,14 @@ if [ "$1" = 'redis-cluster' ]; then
         rm /redis-data/${port}/nodes.conf
       fi
 
+      if [ -e /redis-data/${port}/dump.rdb ]; then
+        rm /redis-data/${port}/dump.rdb
+      fi
+
+      if [ -e /redis-data/${port}/appendonly.aof ]; then
+        rm /redis-data/${port}/appendonly.aof
+      fi
+
       if [ "$port" -lt "7006" ]; then
         PORT=${port} envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
       else
