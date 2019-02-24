@@ -38,15 +38,15 @@ RUN (cd /redis && make)
 RUN mkdir /redis-conf
 RUN mkdir /redis-data
 
-COPY ./docker-data/redis-cluster.tmpl /redis-conf/redis-cluster.tmpl
-COPY ./docker-data/redis.tmpl /redis-conf/redis.tmpl
-COPY ./docker-data/sentinel.tmpl /redis-conf/sentinel.tmpl
+COPY ./redis-cluster.tmpl /redis-conf/redis-cluster.tmpl
+COPY ./redis.tmpl /redis-conf/redis.tmpl
+COPY ./sentinel.tmpl /redis-conf/sentinel.tmpl
 
 # Add startup script
-COPY ./docker-data/docker-entrypoint.sh /docker-entrypoint.sh
+COPY ./docker-entrypoint.sh /docker-entrypoint.sh
 
 # Add script that generates supervisor conf file based on environment variables
-COPY ./docker-data/generate-supervisor-conf.sh /generate-supervisor-conf.sh
+COPY ./generate-supervisor-conf.sh /generate-supervisor-conf.sh
 
 RUN chmod 755 /docker-entrypoint.sh
 
