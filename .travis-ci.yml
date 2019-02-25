@@ -1,0 +1,15 @@
+language: python
+python:
+  - "3.5"
+services:
+  - docker
+env:
+  - REDIS_VERSION=3.0.7
+  - REDIS_VERSION=3.2.12
+  - REDIS_VERSION=4.0.13
+  - REDIS_VERSION=5.0.3
+script:
+  docker build --build-arg redis_version=$REDIS_VERSION -t grokzen/redis-cluster .
+matrix:
+  allow_failures:
+    - python: "nightly"
