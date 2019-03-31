@@ -131,10 +131,11 @@ The following tags with pre-built images is available on `docker-hub`.
 
 Latest release in the most recent stable branch will be used as `latest` version.
 
-- latest == 5.0.3
+- latest == 5.0.4
 
 Redis 5.0.x version:
 
+- 5.0.4
 - 5.0.3
 - 5.0.2
 - 5.0.1
