@@ -5,7 +5,7 @@ services:
   - docker
 env:
   - REDIS_VERSION=3.0.7
-  - REDIS_VERSION=3.2.12
+  - REDIS_VERSION=3.2.13
   - REDIS_VERSION=4.0.14
   - REDIS_VERSION=5.0.3
 script:

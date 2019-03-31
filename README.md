@@ -160,6 +160,7 @@ Redis 4.0.x versions:
 
 Redis 3.2.x versions:
 
+- 3.2.13
 - 3.2.12
 - 3.2.11
 - 3.2.10

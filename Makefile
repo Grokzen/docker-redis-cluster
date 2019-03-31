@@ -85,6 +85,8 @@ build-3.2:
 	docker tag grokzen/redis-cluster grokzen/redis-cluster:3.2.11
 	docker build --build-arg redis_version=3.2.12 -t grokzen/redis-cluster .
 	docker tag grokzen/redis-cluster grokzen/redis-cluster:3.2.12
+	docker build --build-arg redis_version=3.2.13 -t grokzen/redis-cluster .
+	docker tag grokzen/redis-cluster grokzen/redis-cluster:3.2.13
 
 build-4.0:
 	docker build --build-arg redis_version=4.0.0 -t grokzen/redis-cluster .
@@ -158,6 +160,7 @@ push-releases-3.2:
 	docker push grokzen/redis-cluster:3.2.10
 	docker push grokzen/redis-cluster:3.2.11
 	docker push grokzen/redis-cluster:3.2.12
+	docker push grokzen/redis-cluster:3.2.13
 
 push-releases-4.0:
 	docker push grokzen/redis-cluster:4.0.0
