@@ -142,6 +142,7 @@ Redis 5.0.x version:
 
 Redis 4.0.x versions:
 
+- 4.0.14
 - 4.0.13
 - 4.0.12
 - 4.0.11

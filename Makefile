@@ -115,6 +115,8 @@ build-4.0:
 	docker tag grokzen/redis-cluster grokzen/redis-cluster:4.0.12
 	docker build --build-arg redis_version=4.0.13 -t grokzen/redis-cluster .
 	docker tag grokzen/redis-cluster grokzen/redis-cluster:4.0.13
+	docker build --build-arg redis_version=4.0.14 -t grokzen/redis-cluster .
+	docker tag grokzen/redis-cluster grokzen/redis-cluster:4.0.14
 
 build-5.0:
 	docker build --build-arg redis_version=5.0.0 -t grokzen/redis-cluster .
@@ -172,6 +174,7 @@ push-releases-4.0:
 	docker push grokzen/redis-cluster:4.0.11
 	docker push grokzen/redis-cluster:4.0.12
 	docker push grokzen/redis-cluster:4.0.13
+	docker push grokzen/redis-cluster:4.0.14
 
 push-releases-5.0:
 	docker push grokzen/redis-cluster:5.0.0
