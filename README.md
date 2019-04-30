@@ -6,11 +6,23 @@
 
 Docker image with redis built and installed from source and a cluster is built.
 
-The main primary use for this container is to test redis cluster code. Specially https://github.com/Grokzen/redis-py-cluster
 
-This repo is not intended to be a production quality docker build. It will also not be changed to use multiple containers or move away from supervisord, or to have support for different cluster managers, for example kubernetes, docker-ee or swarm. It will also not be made to handle persistent data between runs. However, any suggestions on improvements will be considered.
+## What this repo and container IS
 
-The container is made to be quick and easy to start, use and run.
+This repo exists as a resource to make it quick and simple to get a redis cluster up and running with no fuzz or issues with mininal effort. The primary use for this container is to get a cluster up and running in no time that you can use for demo/presentation/development. It is not intended or built for anything else.
+
+I also aim to have every single release of redis that supports a cluster available for use so you can run the exact version you want.
+
+I personally use this to develop redis cluster client code https://github.com/Grokzen/redis-py-cluster
+
+
+## What this repo and container IS NOT
+
+This container that i have built is not supposed to be some kind of production container or one that is used within any envrionment other then running locally on your machine. It is not ment to be run on kubernetes or in any other prod/stage/test/dev envrionment as a fully working commponent in that envrionment. If that works for you and your use-case then awesome. But this container will not change to fit any other primary solution then to be used locally on your machine.
+
+If you are looking for something else or some production quality or kubernetes compatible solution then you are looking in the wrong repo. There is other projects or forks of this repo that is compatible for that situation/solution.
+
+For all other purposes other then what has been stated you are free to fork and/or rebuild this container using it as a template for what you need.
 
 
 ## Redis instances inside the container
