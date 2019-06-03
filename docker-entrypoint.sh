@@ -67,7 +67,7 @@ if [ "$1" = 'redis-cluster' ]; then
       done
     fi
 
-    tail -f /var/log/supervisor/redis*.log
+    tail -f /var/log/supervisor/redis*.log & wait $!
 else
   exec "$@"
 fi
