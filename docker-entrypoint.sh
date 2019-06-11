@@ -49,6 +49,7 @@ if [ "$1" = 'redis-cluster' ]; then
         IP=$(hostname -I)
     fi
     IP=$(echo ${IP}) # trim whitespaces
+    IP=${IP%% *} # use the first ip
 
     /redis/src/redis-cli --version | grep -E "redis-cli 3.0|redis-cli 3.2|redis-cli 4.0"
 
