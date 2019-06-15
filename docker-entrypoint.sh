@@ -48,8 +48,12 @@ if [ "$1" = 'redis-cluster' ]; then
     if [ -z "$IP" ]; then # If IP is unset then discover it
         IP=$(hostname -I)
     fi
+
+    echo " -- IP Before trim: '$IP'"
     IP=$(echo ${IP}) # trim whitespaces
+    echo " -- IP Before split: '$IP'"
     IP=${IP%% *} # use the first ip
+    echo " -- IP After trim: '$IP'"
 
     /redis/src/redis-cli --version | grep -E "redis-cli 3.0|redis-cli 3.2|redis-cli 4.0"
 
