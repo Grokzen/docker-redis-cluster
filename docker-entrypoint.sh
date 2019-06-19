@@ -24,13 +24,12 @@ if [ "$1" = 'redis-cluster' ]; then
       SLAVES_PER_MASTER=1
     fi
 
-    max_port=$(($INITIAL_PORT + $MASTERS * $SLAVES_PER_MASTER - 1))
+    max_port=$(($INITIAL_PORT + $MASTERS * ( $SLAVES_PER_MASTER  + 1 ) - 1))
     first_standalone=$(($max_port + 1))
     if [ "$STANDALONE" = "true" ]; then
       max_port=$(($max_port + 2))
     fi
 
-    i=1
     for port in $(seq $INITIAL_PORT $max_port); do
       mkdir -p /redis-conf/${port}
       mkdir -p /redis-data/${port}
