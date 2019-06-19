@@ -4,12 +4,34 @@ if [ "$1" = 'redis-cluster' ]; then
     # Allow passing in cluster IP by argument or environmental variable
     IP="${2:-$IP}"
 
-    max_port=7005
-    if [ "$STANDALONE" = "true" ]; then
-      max_port=7007
+    if [ -z "$IP" ]; then # If IP is unset then discover it
+        IP=$(hostname -I)
     fi
 
-    for port in `seq 7000 $max_port`; do
+    echo " -- IP Before trim: '$IP'"
+    IP=$(echo ${IP}) # trim whitespaces
+    echo " -- IP Before split: '$IP'"
+    IP=${IP%% *} # use the first ip
+    echo " -- IP After trim: '$IP'"
+
+    INITIAL_PORT=7000
+
+    if [ -z "$MASTERS" ]; then # Default to 3 masters
+      MASTERS=3
+    fi
+
+    if [ -z "$SLAVES_PER_MASTER" ]; then # Default to 1 slave for each master
+      SLAVES_PER_MASTER=1
+    fi
+
+    max_port=$(($INITIAL_PORT + $MASTERS '*' $SLAVES_PER_MASTER - 1))
+    first_standalone=$(($max_port + 1))
+    if [ "$STANDALONE" = "true" ]; then
+      max_port=$(($max_port + 2))
+    fi
+
+    i=0
+    for port in $(seq $INITIAL_PORT $max_port); do
       mkdir -p /redis-conf/${port}
       mkdir -p /redis-data/${port}
 
@@ -25,13 +47,15 @@ if [ "$1" = 'redis-cluster' ]; then
         rm /redis-data/${port}/appendonly.aof
       fi
 
-      if [ "$port" -lt "7006" ]; then
+      if [ "$port" -lt "$first_standalone"]; then
         PORT=${port} envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
+        nodes[$i]="${IP}:${port}"
+        ((i++))
       else
         PORT=${port} envsubst < /redis-conf/redis.tmpl > /redis-conf/${port}/redis.conf
       fi
 
-      if [ "$port" -lt "7003" ]; then
+      if [ "$port" -lt $(($INITIAL_PORT + $MASTERS)) ]; then
         if [ "$SENTINEL" = "true" ]; then
           PORT=${port} SENTINEL_PORT=$((port - 2000)) envsubst < /redis-conf/sentinel.tmpl > /redis-conf/sentinel-${port}.conf
           cat /redis-conf/sentinel-${port}.conf
@@ -45,29 +69,19 @@ if [ "$1" = 'redis-cluster' ]; then
     supervisord -c /etc/supervisor/supervisord.conf
     sleep 3
 
-    if [ -z "$IP" ]; then # If IP is unset then discover it
-        IP=$(hostname -I)
-    fi
-
-    echo " -- IP Before trim: '$IP'"
-    IP=$(echo ${IP}) # trim whitespaces
-    echo " -- IP Before split: '$IP'"
-    IP=${IP%% *} # use the first ip
-    echo " -- IP After trim: '$IP'"
-
     /redis/src/redis-cli --version | grep -E "redis-cli 3.0|redis-cli 3.2|redis-cli 4.0"
 
     if [ $? -eq 0 ]
     then
       echo "Using old redis-trib.rb to create the cluster"
-      echo "yes" | ruby /redis/src/redis-trib.rb create --replicas 1 ${IP}:7000 ${IP}:7001 ${IP}:7002 ${IP}:7003 ${IP}:7004 ${IP}:7005
+      echo "yes" | ruby /redis/src/redis-trib.rb create --replicas "$SLAVES_PER_MASTER" "${nodes[@]}"
     else
       echo "Using redis-cli to create the cluster"
-      echo "yes" | /redis/src/redis-cli --cluster create --cluster-replicas 1 ${IP}:7000 ${IP}:7001 ${IP}:7002 ${IP}:7003 ${IP}:7004 ${IP}:7005
+      echo "yes" | /redis/src/redis-cli --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "${nodes[@]}"
     fi
 
     if [ "$SENTINEL" = "true" ]; then
-      for port in 7000 7001 7002; do
+      for port in $(seq $INITIAL_PORT $(($INITIAL_PORT + $MASTERS))); do
         redis-sentinel /redis-conf/sentinel-${port}.conf &
       done
     fi
