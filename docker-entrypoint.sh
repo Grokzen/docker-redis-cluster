@@ -49,8 +49,7 @@ if [ "$1" = 'redis-cluster' ]; then
 
       if [ "$port" -lt "$first_standalone" ]; then
         PORT=${port} envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
-        nodes[$i]="${IP}:${port}"
-        ((i++))
+        nodes="$nodes $IP:$port"
       else
         PORT=${port} envsubst < /redis-conf/redis.tmpl > /redis-conf/${port}/redis.conf
       fi
@@ -74,10 +73,10 @@ if [ "$1" = 'redis-cluster' ]; then
     if [ $? -eq 0 ]
     then
       echo "Using old redis-trib.rb to create the cluster"
-      echo "yes" | ruby /redis/src/redis-trib.rb create --replicas "$SLAVES_PER_MASTER" "${nodes[@]}"
+      echo "yes" | eval ruby /redis/src/redis-trib.rb create --replicas "$SLAVES_PER_MASTER" "$nodes"
     else
       echo "Using redis-cli to create the cluster"
-      echo "yes" | /redis/src/redis-cli --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "${nodes[@]}"
+      echo "yes" | eval /redis/src/redis-cli --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$nodes"
     fi
 
     if [ "$SENTINEL" = "true" ]; then
