@@ -64,7 +64,7 @@ if [ "$1" = 'redis-cluster' ]; then
 
     done
 
-    bash /generate-supervisor-conf.sh $max_port > /etc/supervisor/supervisord.conf
+    bash /generate-supervisor-conf.sh $INITIAL_PORT $max_port > /etc/supervisor/supervisord.conf
 
     supervisord -c /etc/supervisor/supervisord.conf
     sleep 3
