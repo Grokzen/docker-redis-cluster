@@ -1,4 +1,5 @@
-max_port="$1"
+initial_port="$1"
+max_port="$2"
 
 program_entry_template ()
 {
@@ -20,7 +21,7 @@ nodaemon=false
 "
 
 count=1
-for port in `seq 7000 $max_port`; do
+for port in `seq $initial_port $max_port`; do
   result_str="$result_str$(program_entry_template $count $port)"
   count=$((count + 1))
 done
