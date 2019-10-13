@@ -29,7 +29,10 @@ if [ "$1" = 'redis-cluster' ]; then
     max_port=$(($INITIAL_PORT + $MASTERS * ( $SLAVES_PER_MASTER  + 1 ) - 1))
     first_standalone=$(($max_port + 1))
     if [ "$STANDALONE" = "true" ]; then
-      max_port=$(($max_port + 2))
+      STANDALONE=2
+    fi
+    if [ ! -z "$STANDALONE" ]; then
+      max_port=$(($max_port + $STANDALONE))
     fi
 
     for port in $(seq $INITIAL_PORT $max_port); do
