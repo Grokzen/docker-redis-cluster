@@ -29,7 +29,7 @@ For all other purposes other then what has been stated you are free to fork and/
 
 The cluster is 6 redis instances running with 3 master & 3 slaves, one slave for each master. They run on ports 7000 to 7005.
 
-If the flag `-e "STANDALONE=true"` is passed there are, by default, 2 standalone instances running on port 7006 and 7007. However, you can set this variable to a number of standalone nodes you want, e.g., `-e "STANDALONE=1"`. Note the standalone ports start right after the last slave.
+If the flag `-e "STANDALONE=true"` is passed there are, by default, 2 standalone instances running on port 7006 and 7007. However, you can also set this variable to a number of standalone nodes you want, e.g., `-e "STANDALONE=1"`. Note the standalone ports start right after the last slave.
 
 If the flag `-e "SENTINEL=true"` is passed there are 3 Sentinel nodes running on ports 5000 to 5002 matching cluster's master instances.
 
