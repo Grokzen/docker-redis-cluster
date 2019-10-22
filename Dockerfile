@@ -1,7 +1,24 @@
 # Build from commits based on redis:3.2
-FROM redis@sha256:000339fb57e0ddf2d48d72f3341e47a8ca3b1beae9bdcb25a96323095b72a79b
+ARG redis_version=5.0.5
+
+FROM redis@sha256:000339fb57e0ddf2d48d72f3341e47a8ca3b1beae9bdcb25a96323095b72a79b AS builder
 
 LABEL maintainer="Johan Andersson <Grokzen@gmail.com>"
+
+ARG redis_version
+
+RUN apt-get update -qq \
+    && apt-get install -y gcc make g++ build-essential libc6-dev tcl git supervisor ruby wget
+
+RUN wget -qO redis.tar.gz https://github.com/antirez/redis/archive/${redis_version}.tar.gz \
+    && tar xfz redis.tar.gz -C / \
+    && mv /redis-$redis_version /redis
+
+RUN (cd /redis && make)
+
+FROM redis:${redis_version}
+
+ARG redis_version
 
 # Some Environment Variables
 ENV HOME /root
@@ -23,20 +40,12 @@ ENV SSL_CERT_FILE=/usr/local/etc/openssl/cert.pem
 
 RUN gem install redis -v 4.0.2
 
-RUN apt-get install -y gcc make g++ build-essential libc6-dev tcl git supervisor ruby
-
-ARG redis_version=5.0.5
-
 RUN echo $redis_version > /redis-version.txt
 
-RUN wget -qO redis.tar.gz https://github.com/antirez/redis/archive/${redis_version}.tar.gz \
-    && tar xfz redis.tar.gz -C / \
-    && mv /redis-$redis_version /redis
+RUN mkdir /redis-conf && \
+	mkdir /redis-data
 
-RUN (cd /redis && make)
-
-RUN mkdir /redis-conf
-RUN mkdir /redis-data
+COPY --from=builder /redis /redis
 
 COPY ./redis-cluster.tmpl /redis-conf/redis-cluster.tmpl
 COPY ./redis.tmpl /redis-conf/redis.tmpl
