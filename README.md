@@ -18,7 +18,7 @@ I personally use this to develop redis cluster client code https://github.com/Gr
 
 ## What this repo and container IS NOT
 
-This container that i have built is not supposed to be some kind of production container or one that is used within any envrionment other then running locally on your machine. It is not ment to be run on kubernetes or in any other prod/stage/test/dev envrionment as a fully working commponent in that envrionment. If that works for you and your use-case then awesome. But this container will not change to fit any other primary solution then to be used locally on your machine.
+This container that i have built is not supposed to be some kind of production container or one that is used within any environment other then running locally on your machine. It is not ment to be run on kubernetes or in any other prod/stage/test/dev environment as a fully working commponent in that environment. If that works for you and your use-case then awesome. But this container will not change to fit any other primary solution then to be used locally on your machine.
 
 If you are looking for something else or some production quality or kubernetes compatible solution then you are looking in the wrong repo. There is other projects or forks of this repo that is compatible for that situation/solution.
 
@@ -42,7 +42,7 @@ This image requires at least `Docker` version 1.10 but the latest version is rec
 
 If you are using this container to run a redis cluster on your mac computer, then you need to configure the container to use another IP address for cluster discovery as it can't use the default discovery IP that is hardcoded into the container.
 
-If you are using the docker-compose file to build the container, then you must export a envrionment variable on your machine before building the container.
+If you are using the docker-compose file to build the container, then you must export a environment variable on your machine before building the container.
 
 ```
 # This will make redis do cluster discovery and bind all nodes to ip 127.0.0.1 internally
@@ -50,7 +50,7 @@ If you are using the docker-compose file to build the container, then you must e
 export REDIS_CLUSTER_IP=0.0.0.0
 ```
 
-If you are downloading the container from dockerhub, you must add the internal IP envrionment variable to your `docker run` command.
+If you are downloading the container from dockerhub, you must add the internal IP environment variable to your `docker run` command.
 
 ```
 docker run  -e "IP=0.0.0.0" grokzen/redis-cluster:latest ...
@@ -89,7 +89,7 @@ If running with plain docker run
 
     docker run ... -e STANDALONE=true ...
 
-When running with docker-compose, set the envrionment variable on your system `REDIS_USE_STANDALONE=true` and start your container or modify the `docker-compose.yml` file
+When running with docker-compose, set the environment variable on your system `REDIS_USE_STANDALONE=true` and start your container or modify the `docker-compose.yml` file
 
       version: '2'
       services:
