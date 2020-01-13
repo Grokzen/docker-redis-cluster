@@ -195,3 +195,64 @@ push-latest:
 	docker push grokzen/redis-cluster:latest
 
 push-all: push-releases-3.0 push-releases-3.2 push-releases-4.0 push-latest
+
+
+#
+## Pull operations for rebuilding all containers from already published versions
+#
+
+pull-releases-3.0:
+	docker pull grokzen/redis-cluster:3.0.0
+	docker pull grokzen/redis-cluster:3.0.1
+	docker pull grokzen/redis-cluster:3.0.2
+	docker pull grokzen/redis-cluster:3.0.3
+	docker pull grokzen/redis-cluster:3.0.4
+	docker pull grokzen/redis-cluster:3.0.5
+	docker pull grokzen/redis-cluster:3.0.6
+	docker pull grokzen/redis-cluster:3.0.7
+
+pull-releases-3.2:
+	docker pull grokzen/redis-cluster:3.2.0
+	docker pull grokzen/redis-cluster:3.2.1
+	docker pull grokzen/redis-cluster:3.2.2
+	docker pull grokzen/redis-cluster:3.2.3
+	docker pull grokzen/redis-cluster:3.2.4
+	docker pull grokzen/redis-cluster:3.2.5
+	docker pull grokzen/redis-cluster:3.2.6
+	docker pull grokzen/redis-cluster:3.2.7
+	docker pull grokzen/redis-cluster:3.2.8
+	docker pull grokzen/redis-cluster:3.2.9
+	docker pull grokzen/redis-cluster:3.2.10
+	docker pull grokzen/redis-cluster:3.2.11
+	docker pull grokzen/redis-cluster:3.2.12
+	docker pull grokzen/redis-cluster:3.2.13
+
+pull-releases-4.0:
+	docker pull grokzen/redis-cluster:4.0.0
+	docker pull grokzen/redis-cluster:4.0.1
+	docker pull grokzen/redis-cluster:4.0.2
+	docker pull grokzen/redis-cluster:4.0.3
+	docker pull grokzen/redis-cluster:4.0.4
+	docker pull grokzen/redis-cluster:4.0.5
+	docker pull grokzen/redis-cluster:4.0.6
+	docker pull grokzen/redis-cluster:4.0.7
+	docker pull grokzen/redis-cluster:4.0.8
+	docker pull grokzen/redis-cluster:4.0.9
+	docker pull grokzen/redis-cluster:4.0.10
+	docker pull grokzen/redis-cluster:4.0.11
+	docker pull grokzen/redis-cluster:4.0.12
+	docker pull grokzen/redis-cluster:4.0.13
+	docker pull grokzen/redis-cluster:4.0.14
+
+pull-releases-5.0:
+	docker pull grokzen/redis-cluster:5.0.0
+	docker pull grokzen/redis-cluster:5.0.1
+	docker pull grokzen/redis-cluster:5.0.2
+	docker pull grokzen/redis-cluster:5.0.3
+	docker pull grokzen/redis-cluster:5.0.4
+	docker pull grokzen/redis-cluster:5.0.5
+
+pull-latest:
+	docker pull grokzen/redis-cluster:latest
+
+pull-all: pull-releases-3.0 pull-releases-3.2 pull-releases-4.0 pull-latest
