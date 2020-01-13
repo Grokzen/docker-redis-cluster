@@ -1,5 +1,5 @@
-# Build from commits based on redis:3.2
-FROM redis@sha256:000339fb57e0ddf2d48d72f3341e47a8ca3b1beae9bdcb25a96323095b72a79b
+# Build from commits based on redis:5
+FROM redis@sha256:90d44d431229683cadd75274e6fcb22c3e0396d149a8f8b7da9925021ee75c30
 
 LABEL maintainer="Johan Andersson <Grokzen@gmail.com>"
 
@@ -25,7 +25,7 @@ RUN gem install redis -v 4.0.2
 
 RUN apt-get install -y gcc make g++ build-essential libc6-dev tcl git supervisor ruby
 
-ARG redis_version=5.0.5
+ARG redis_version=5.0.7
 
 RUN echo $redis_version > /redis-version.txt
 
