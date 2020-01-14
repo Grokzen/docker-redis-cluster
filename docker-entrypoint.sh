@@ -69,7 +69,7 @@ if [ "$1" = 'redis-cluster' ]; then
     supervisord -c /etc/supervisor/supervisord.conf
     sleep 3
 
-    /redis/src/redis-cli --version | grep -E "redis-cli 3.0|redis-cli 3.2|redis-cli 4.0"
+    /redis/src/redis-cli --version | grep -E "redis-cli 3.0|redis-cli 3.2|redis-cli 4.0|redis-cli 5.0"
 
     if [ $? -eq 0 ]
     then
