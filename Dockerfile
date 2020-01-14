@@ -10,7 +10,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # Install system dependencies
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -yqq \
-      net-tools supervisor ruby rubygems locales gettext-base wget && \
+      net-tools supervisor ruby rubygems locales gettext-base wget gcc make g++ build-essential libc6-dev tcl && \
     apt-get clean -yqq
 
 # # Ensure UTF-8 lang and locale
@@ -23,11 +23,7 @@ ENV SSL_CERT_FILE=/usr/local/etc/openssl/cert.pem
 
 RUN gem install redis -v 4.1.3
 
-RUN apt-get install -y gcc make g++ build-essential libc6-dev tcl git supervisor ruby
-
 ARG redis_version=5.0.7
-
-RUN echo $redis_version > /redis-version.txt
 
 RUN wget -qO redis.tar.gz https://github.com/antirez/redis/archive/${redis_version}.tar.gz \
     && tar xfz redis.tar.gz -C / \
@@ -35,18 +31,17 @@ RUN wget -qO redis.tar.gz https://github.com/antirez/redis/archive/${redis_versi
 
 RUN (cd /redis && make)
 
-RUN mkdir /redis-conf
-RUN mkdir /redis-data
+RUN mkdir /redis-conf && mkdir /redis-data
 
-COPY ./redis-cluster.tmpl /redis-conf/redis-cluster.tmpl
-COPY ./redis.tmpl /redis-conf/redis.tmpl
-COPY ./sentinel.tmpl /redis-conf/sentinel.tmpl
+COPY redis-cluster.tmpl /redis-conf/redis-cluster.tmpl
+COPY redis.tmpl         /redis-conf/redis.tmpl
+COPY sentinel.tmpl      /redis-conf/sentinel.tmpl
 
 # Add startup script
-COPY ./docker-entrypoint.sh /docker-entrypoint.sh
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 
 # Add script that generates supervisor conf file based on environment variables
-COPY ./generate-supervisor-conf.sh /generate-supervisor-conf.sh
+COPY generate-supervisor-conf.sh /generate-supervisor-conf.sh
 
 RUN chmod 755 /docker-entrypoint.sh
 
