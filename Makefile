@@ -12,6 +12,7 @@ help:
 	@echo "  build-3.2"
 	@echo "  build-4.0"
 	@echo "  build-5.0"
+	@echo "  build-6.0"
 	@echo "  build-latest"
 	@echo "  build-all"
 	@echo "----------"
@@ -20,6 +21,7 @@ help:
 	@echo "  push-releases-3.2"
 	@echo "  push-releases-4.0"
 	@echo "  push-releases-5.0"
+	@echo "  push-releases-6.0"
 	@echo "  push-releases-latest"
 	@echo "----------"
 	@echo "Pull command options"
@@ -27,6 +29,7 @@ help:
 	@echo "  pull-releases-3.2"
 	@echo "  pull-releases-4.0"
 	@echo "  pull-releases-5.0"
+	@echo "  pull-releases-6.0"
 	@echo "  pull-releases-latest"
 
 build:
@@ -100,6 +103,9 @@ build-5.0:
 	docker build --build-arg redis_version=5.0.6 -t grokzen/redis-cluster:5.0.6 .
 	docker build --build-arg redis_version=5.0.7 -t grokzen/redis-cluster:5.0.7 .
 
+build-6.0:
+	docker build --build-arg redis_version=6.0-rc1 -t grokzen/redis-cluster:6.0-rc1 .
+
 build-latest:
 	docker build --build-arg redis_version=5.0.7 -t grokzen/redis-cluster:latest .
 
@@ -157,6 +163,9 @@ push-releases-5.0:
 	docker push grokzen/redis-cluster:5.0.5
 	docker push grokzen/redis-cluster:5.0.6
 	docker push grokzen/redis-cluster:5.0.7
+
+push-releases-6.0:
+	docker push grokzen/redis-cluster:6.0-rc1
 
 push-latest:
 	docker push grokzen/redis-cluster:latest
@@ -220,6 +229,9 @@ pull-releases-5.0:
 	docker pull grokzen/redis-cluster:5.0.5
 	docker pull grokzen/redis-cluster:5.0.6
 	docker pull grokzen/redis-cluster:5.0.7
+
+pull-releases-6.0:
+	docker pull grokzen/redis-cluster:6.0-rc1
 
 pull-latest:
 	docker pull grokzen/redis-cluster:latest

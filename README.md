@@ -171,6 +171,10 @@ Latest release in the most recent stable branch will be used as `latest` version
 
 - latest == 5.0.7
 
+REdis 6.0.x versions:
+
+- 6.0-rc1
+
 Redis 5.0.x version:
 
 - 5.0.7
