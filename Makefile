@@ -23,6 +23,7 @@ help:
 	@echo "  push-releases-5.0"
 	@echo "  push-releases-6.0"
 	@echo "  push-releases-latest"
+	@echo "  push-all"
 	@echo "----------"
 	@echo "Pull command options"
 	@echo "  pull-releases-3.0"
@@ -31,6 +32,7 @@ help:
 	@echo "  pull-releases-5.0"
 	@echo "  pull-releases-6.0"
 	@echo "  pull-releases-latest"
+	@echo "  pull-all"
 
 build:
 	docker-compose build
