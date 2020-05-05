@@ -1,5 +1,5 @@
-# Build from commits based on redis:5
-FROM redis@sha256:90d44d431229683cadd75274e6fcb22c3e0396d149a8f8b7da9925021ee75c30
+# Build based on redis:6.0 from 2020-05-05
+FROM redis@sha256:f7ee67d8d9050357a6ea362e2a7e8b65a6823d9b612bc430d057416788ef6df9
 
 LABEL maintainer="Johan Andersson <Grokzen@gmail.com>"
 
