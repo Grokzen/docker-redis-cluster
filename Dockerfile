@@ -23,7 +23,7 @@ ENV SSL_CERT_FILE=/usr/local/etc/openssl/cert.pem
 
 RUN gem install redis -v 4.1.3
 
-ARG redis_version=5.0.7
+ARG redis_version=6.0.1
 
 RUN wget -qO redis.tar.gz https://github.com/antirez/redis/archive/${redis_version}.tar.gz \
     && tar xfz redis.tar.gz -C / \
