@@ -109,6 +109,7 @@ build-5.0:
 
 build-6.0:
 	docker build --build-arg redis_version=6.0.0 -t grokzen/redis-cluster:6.0.0 .
+	docker build --build-arg redis_version=6.0.1 -t grokzen/redis-cluster:6.0.1 .
 
 build-latest:
 	docker build --build-arg redis_version=6.0.1 -t grokzen/redis-cluster:latest .
@@ -172,6 +173,7 @@ push-releases-5.0:
 
 push-releases-6.0:
 	docker push grokzen/redis-cluster:6.0.0
+	docker push grokzen/redis-cluster:6.0.1
 
 push-latest:
 	docker push grokzen/redis-cluster:latest
@@ -240,6 +242,7 @@ pull-releases-5.0:
 
 pull-releases-6.0:
 	docker pull grokzen/redis-cluster:6.0.0
+	docker pull grokzen/redis-cluster:6.0.1
 
 pull-latest:
 	docker pull grokzen/redis-cluster:latest
