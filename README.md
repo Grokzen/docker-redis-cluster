@@ -140,6 +140,11 @@ Also note that the number of sentinels (if enabled) is the same as the number of
           MASTERS: 2,
           SLAVES_PER_MASTER: 2
 
+## Data Persistence
+
+```
+docker run -v $(pwd):/redis-data ...
+```
 
 ## Build alternative redis versions
 
