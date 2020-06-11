@@ -10,7 +10,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # Install system dependencies
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -yqq \
-      net-tools supervisor ruby rubygems locales gettext-base wget gcc make g++ build-essential libc6-dev tcl && \
+      net-tools supervisor ruby rubygems locales gettext-base wget gcc make g++ build-essential libc6-dev tcl libssl-dev && \
     apt-get clean -yqq
 
 # # Ensure UTF-8 lang and locale
@@ -29,13 +29,18 @@ RUN wget -qO redis.tar.gz https://github.com/antirez/redis/archive/${redis_versi
     && tar xfz redis.tar.gz -C / \
     && mv /redis-$redis_version /redis
 
-RUN (cd /redis && make)
+RUN (cd /redis && export BUILD_TLS=yes && make)
 
 RUN mkdir /redis-conf && mkdir /redis-data
 
-COPY redis-cluster.tmpl /redis-conf/redis-cluster.tmpl
-COPY redis.tmpl         /redis-conf/redis.tmpl
-COPY sentinel.tmpl      /redis-conf/sentinel.tmpl
+COPY redis-cluster.tmpl       /redis-conf/redis-cluster.tmpl
+COPY redis-cluster-tls.tmpl   /redis-conf/redis-cluster-tls.tmpl
+COPY redis.tmpl               /redis-conf/redis.tmpl
+COPY redis-tls.tmpl           /redis-conf/redis-tls.tmpl
+COPY sentinel.tmpl            /redis-conf/sentinel.tmpl
+COPY tls-certs/ca.crt         /redis-conf/ca.crt
+COPY tls-certs/redis.key      /redis-conf/redis.key
+COPY tls-certs/redis.crt      /redis-conf/redis.crt
 
 # Add startup script
 COPY docker-entrypoint.sh /docker-entrypoint.sh

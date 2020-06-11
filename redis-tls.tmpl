@@ -1,0 +1,8 @@
+bind 0.0.0.0
+port 0
+appendonly yes
+dir /redis-data/${PORT}
+tls-port ${PORT}
+tls-ca-cert-file /redis-conf/ca.crt
+tls-key-file /redis-conf/redis.key
+tls-cert-file /redis-conf/redis.crt

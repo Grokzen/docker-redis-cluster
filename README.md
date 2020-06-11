@@ -20,7 +20,7 @@ I personally use this to develop redis cluster client code https://github.com/Gr
 
 ## What this repo and container IS NOT
 
-This container that i have built is not supposed to be some kind of production container or one that is used within any environment other then running locally on your machine. It is not ment to be run on kubernetes or in any other prod/stage/test/dev environment as a fully working commponent in that environment. If that works for you and your use-case then awesome. But this container will not change to fit any other primary solution then to be used locally on your machine.
+This container that I have built is not supposed to be some kind of production container or one that is used within any environment other then running locally on your machine. It is not ment to be run on kubernetes or in any other prod/stage/test/dev environment as a fully working commponent in that environment. If that works for you and your use-case then awesome. But this container will not change to fit any other primary solution then to be used locally on your machine.
 
 If you are looking for something else or some production quality or kubernetes compatible solution then you are looking in the wrong repo. There is other projects or forks of this repo that is compatible for that situation/solution.
 
@@ -35,6 +35,7 @@ If the flag `-e "STANDALONE=true"` is passed there are, by default, 2 standalone
 
 If the flag `-e "SENTINEL=true"` is passed there are 3 Sentinel nodes running on ports 5000 to 5002 matching cluster's master instances.
 
+If the flag `-e "TLS=true"` is passed then TLS is set up with certs taken from directory tls-certs.
 
 This image requires at least `Docker` version 1.10 but the latest version is recommended.
 
@@ -116,6 +117,22 @@ When running with docker-compose set the environment variable on your system `RE
         environment:
           SENTINEL: 'true'
 
+## TLS
+
+TLS is not enabled by default, but available. If enabled then all non-TLS traffic is disabled. Won't work with Redis versions below 6.
+
+If running with plain docker run
+
+    docker run ... -e TLS=true ...
+
+When running with docker-compose, set the environment variable on your system `REDIS_USE_TLS=true` and start your container or modify the `docker-compose.yml` file
+
+      version: '2'
+      services:
+        redis-cluster:
+          ...
+        environment:
+          TLS: 'true'
 
 ## Change number of nodes
 

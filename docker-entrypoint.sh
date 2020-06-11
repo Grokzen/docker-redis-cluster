@@ -52,10 +52,18 @@ if [ "$1" = 'redis-cluster' ]; then
       fi
 
       if [ "$port" -lt "$first_standalone" ]; then
-        PORT=${port} envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
+        if [ "$TLS" = "true" ]; then
+          PORT=${port} envsubst < /redis-conf/redis-cluster-tls.tmpl > /redis-conf/${port}/redis.conf
+        else
+          PORT=${port} envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
+        fi
         nodes="$nodes $IP:$port"
       else
-        PORT=${port} envsubst < /redis-conf/redis.tmpl > /redis-conf/${port}/redis.conf
+        if [ "$TLS" = "true" ]; then
+          PORT=${port} envsubst < /redis-conf/redis-tls.tmpl > /redis-conf/${port}/redis.conf
+        else
+          PORT=${port} envsubst < /redis-conf/redis.tmpl > /redis-conf/${port}/redis.conf
+        fi
       fi
 
       if [ "$port" -lt $(($INITIAL_PORT + $MASTERS)) ]; then
@@ -83,8 +91,13 @@ if [ "$1" = 'redis-cluster' ]; then
       echo "Using old redis-trib.rb to create the cluster"
       echo "yes" | eval ruby /redis/src/redis-trib.rb create --replicas "$SLAVES_PER_MASTER" "$nodes"
     else
-      echo "Using redis-cli to create the cluster"
-      echo "yes" | eval /redis/src/redis-cli --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$nodes"
+      if [ "$TLS" = "true" ]; then
+        echo "Using redis-cli to create the TLS Redis cluster"
+        echo "yes" | eval /redis/src/redis-cli --tls --cacert /redis-conf/ca.crt --cert /redis-conf/redis.crt --key /redis-conf/redis.key  --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$nodes"
+      else
+        echo "Using redis-cli to create the cluster"
+        echo "yes" | eval /redis/src/redis-cli --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$nodes"
+      fi
     fi
 
     if [ "$SENTINEL" = "true" ]; then
