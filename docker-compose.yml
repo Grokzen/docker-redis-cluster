@@ -5,6 +5,7 @@ services:
      IP: ${REDIS_CLUSTER_IP}
      SENTINEL: ${REDIS_USE_SENTINEL}
      STANDALONE: ${REDIS_USE_STANDALONE}
+     TLS: ${REDIS_USE_TLS}
     build:
       context: .
       args:

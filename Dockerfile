@@ -10,7 +10,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # Install system dependencies
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -yqq \
-      net-tools supervisor ruby rubygems locales gettext-base wget gcc make g++ build-essential libc6-dev tcl && \
+      net-tools supervisor ruby rubygems locales gettext-base wget gcc make g++ build-essential libc6-dev tcl-tls libssl-dev && \
     apt-get clean -yqq
 
 # # Ensure UTF-8 lang and locale
@@ -30,13 +30,18 @@ RUN wget -qO redis.tar.gz https://github.com/redis/redis/tarball/${redis_version
     && tar xfz redis.tar.gz -C / \
     && mv /redis-* /redis
 
-RUN (cd /redis && make)
+RUN (cd /redis && make BUILD_TLS=yes)
 
 RUN mkdir /redis-conf && mkdir /redis-data
 
-COPY redis-cluster.tmpl /redis-conf/redis-cluster.tmpl
-COPY redis.tmpl         /redis-conf/redis.tmpl
-COPY sentinel.tmpl      /redis-conf/sentinel.tmpl
+COPY redis-cluster.tmpl     /redis-conf/redis-cluster.tmpl
+# File removed: Support for standalone instances dropped
+# COPY redis.tmpl             /redis-conf/redis.tmpl
+COPY sentinel.tmpl          /redis-conf/sentinel.tmpl
+COPY redis-cluster-tls.tmpl /redis-conf/redis-cluster-tls.tmpl
+COPY tls-certs/ca.crt       /redis-conf/ca.crt
+COPY tls-certs/redis.key    /redis-conf/redis.key
+COPY tls-certs/redis.crt    /redis-conf/redis.crt
 
 # Add startup script
 COPY docker-entrypoint.sh /docker-entrypoint.sh

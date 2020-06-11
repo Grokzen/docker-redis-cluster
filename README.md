@@ -57,6 +57,7 @@ The cluster is 6 redis instances running with 3 master & 3 slaves, one slave for
 
 If the flag `-e "SENTINEL=true"` is passed there are 3 Sentinel nodes running on ports 5000 to 5002 matching cluster's master instances.
 
+If the flag `-e "TLS=true"` is passed then TLS is set up with certs taken from directory `tls-certs`.
 
 This image requires at least `Docker` version 1.10 but the latest version is recommended.
 
@@ -155,6 +156,45 @@ When running with docker-compose set the environment variable on your system `RE
         ...
       environment:
         SENTINEL: 'true'
+
+## TLS
+
+TLS is not enabled by default, but available. It is supported by Redis starting with version 6 and when enabled all non-TLS traffic is disabled.
+
+If running with plain docker send in `-e TLS=true` to enable TLS.
+
+When running with docker-compose set the environment variable on your system `REDIS_USE_TLS=true` and start your container or modify the `docker-compose.yml` file
+
+      version: '2'
+      services:
+        redis-cluster:
+          ...
+        environment:
+          TLS: 'true'
+
+### TLS certificates
+
+Sample certificates are bundled, see folder `tls-certs`.
+If you want to create your own certificates you can do this by downloading Redis distribution and using
+the script `gen-test-certs.sh` in utils directory. More details can be found in the [Redis TLS documentation](https://redis.io/topics/encryption).
+
+### Feed your own certificates using docker run
+
+Place generated certificates into the `tls-certs` directory and mount the files:
+
+```
+docker run ... -v ./tls-certs/ca.crt:/redis-conf/ca.crt:ro -v ./tls-certs/ca.key:/redis-conf/ca.key:ro -v ./tls-certs/redis.crt:/redis-conf/redis.crt:ro -v ./tls-certs/redis.key:/redis-conf/redis.key:ro
+```
+
+### Feed your own certificates using docker-compose
+
+Place generated certificates into the `tls-certs` directory and add the following to `docker-compose.yml`:
+
+    volumes:
+      - ./tls-certs/ca.crt:/redis-conf/ca.crt:ro
+      - ./tls-certs/ca.key:/redis-conf/ca.key:ro
+      - ./tls-certs/redis.crt:/redis-conf/redis.crt:ro
+      - ./tls-certs/redis.key:/redis-conf/redis.key:ro
 
 
 ## Change number of nodes
