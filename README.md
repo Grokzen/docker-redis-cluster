@@ -134,6 +134,29 @@ When running with docker-compose, set the environment variable on your system `R
         environment:
           TLS: 'true'
 
+### TLS certificates
+
+Sample certificates are bundled (see inside folder tls-certs).
+If you want to create your own certificates you can do this by downloading Redis distribution and using
+the script gen-test-certs.sh in utils directory. More info in [Redis TLS documentation](https://redis.io/topics/encryption).
+
+### Feed your own certificates using docker run
+
+Place generated certificates into tls-certs directory and add parameters
+
+docker run ... -v ./tls-certs/ca.crt:/redis-conf/ca.crt:ro -v ./tls-certs/ca.key:/redis-conf/ca.key:ro -v ./tls-certs/redis.crt:/redis-conf/redis.crt:ro -v ./tls-certs/redis.key:/redis-conf/redis.key:ro
+
+### Feed your own certificates using docker-compose
+
+Place generated certificates into tls-certs directory and add the following to docker-compose.yml:
+
+    volumes:
+      - ./tls-certs/ca.crt:/redis-conf/ca.crt:ro
+      - ./tls-certs/ca.key:/redis-conf/ca.key:ro
+      - ./tls-certs/redis.crt:/redis-conf/redis.crt:ro
+      - ./tls-certs/redis.key:/redis-conf/redis.key:ro
+
+
 ## Change number of nodes
 
 Be default, it is going to launch 3 masters with 1 slave per master. This is configurable through a number of environment variables:
