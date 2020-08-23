@@ -55,7 +55,7 @@ export REDIS_CLUSTER_IP=0.0.0.0
 If you are downloading the container from dockerhub, you must add the internal IP environment variable to your `docker run` command.
 
 ```
-docker run  -e "IP=0.0.0.0" grokzen/redis-cluster:latest ...
+docker run  -e "IP=0.0.0.0" -p 7000:7000 -p 7001:7001 -p 7002:7002  grokzen/redis-cluster:latest ...
 ```
 
 
