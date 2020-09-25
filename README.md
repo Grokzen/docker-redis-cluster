@@ -171,10 +171,17 @@ The following tags with pre-built images is available on `docker-hub`.
 
 Latest release in the most recent stable branch will be used as `latest` version.
 
-- latest == 6.0.1
+- latest == 6.0.8
 
 Redis 6.0.x versions:
 
+- 6.0.8
+- 6.0.7
+- 6.0.6
+- 6.0.5
+- 6.0.4
+- 6.0.3
+- 6.0.2
 - 6.0.1
 - 6.0.0
 
