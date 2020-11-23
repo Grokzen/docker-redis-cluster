@@ -52,7 +52,13 @@ if [ "$1" = 'redis-cluster' ]; then
       fi
 
       if [ "$port" -lt "$first_standalone" ]; then
-        PORT=${port} envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
+        if [ -n "$PASSWORD" ]; then
+          requirepass="requirepass \"${PASSWORD}\""
+          masterauth="masterauth \"${PASSWORD}\""
+        fi
+
+        PORT=${port} REQUIREPASS=${requirepass} MASTERAUTH=${masterauth} \
+          envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
         nodes="$nodes $IP:$port"
       else
         PORT=${port} envsubst < /redis-conf/redis.tmpl > /redis-conf/${port}/redis.conf
@@ -84,7 +90,10 @@ if [ "$1" = 'redis-cluster' ]; then
       echo "yes" | eval ruby /redis/src/redis-trib.rb create --replicas "$SLAVES_PER_MASTER" "$nodes"
     else
       echo "Using redis-cli to create the cluster"
-      echo "yes" | eval /redis/src/redis-cli --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$nodes"
+      if [ -n "$PASSWORD" ]; then
+        password_arg="-a $PASSWORD"
+      fi
+      echo "yes" | eval /redis/src/redis-cli --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$password_arg" "$nodes"
     fi
 
     if [ "$SENTINEL" = "true" ]; then
