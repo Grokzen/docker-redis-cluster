@@ -26,6 +26,10 @@ if [ "$1" = 'redis-cluster' ]; then
       SLAVES_PER_MASTER=1
     fi
 
+    if [ -z "$BIND_ADDRESS" ]; then # Default to any IPv4 address
+      BIND_ADDRESS=0.0.0.0
+    fi
+
     max_port=$(($INITIAL_PORT + $MASTERS * ( $SLAVES_PER_MASTER  + 1 ) - 1))
     first_standalone=$(($max_port + 1))
     if [ "$STANDALONE" = "true" ]; then
@@ -52,10 +56,10 @@ if [ "$1" = 'redis-cluster' ]; then
       fi
 
       if [ "$port" -lt "$first_standalone" ]; then
-        PORT=${port} envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
+        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
         nodes="$nodes $IP:$port"
       else
-        PORT=${port} envsubst < /redis-conf/redis.tmpl > /redis-conf/${port}/redis.conf
+        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} envsubst < /redis-conf/redis.tmpl > /redis-conf/${port}/redis.conf
       fi
 
       if [ "$port" -lt $(($INITIAL_PORT + $MASTERS)) ]; then

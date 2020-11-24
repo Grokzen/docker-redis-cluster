@@ -143,6 +143,23 @@ Also note that the number of sentinels (if enabled) is the same as the number of
           SLAVES_PER_MASTER: 2
 
 
+## IPv6 support
+
+By default, redis instances will bind and accept requests from any IPv4 network.
+This is configurable by an environment variable that specifies which address a redis instance will bind to.
+By using the IPv6 variant `::` as counterpart to IPv4s `0.0.0.0` an IPv6 cluster can be created.
+
+| Environment variable | Default |
+| -------------------- | ------: |
+| `BIND_ADDRESS`       | 0.0.0.0 |
+
+Note that Docker also needs to be [configured](https://docs.docker.com/config/daemon/ipv6/) for IPv6 support.
+Unfortunately Docker does not handle IPv6 NAT so, when acceptable, `--network host` can be used.
+
+    # Example using plain docker
+    docker run -e "IP=::1" -e "BIND_ADDRESS=::" --network host grokzen/redis-cluster:latest
+
+
 ## Build alternative redis versions
 
 For a release to be buildable it needs to be present at this url: http://download.redis.io/releases/
