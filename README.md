@@ -125,7 +125,7 @@ Be default, it is going to launch 3 masters with 1 slave per master. This is con
 | -------------------- |--------:|
 | `INITIAL_PORT`       |    7000 |
 | `MASTERS`            |       3 |
-| `SLAVES_PER_MASTER`  |       1 | 
+| `SLAVES_PER_MASTER`  |       1 |
 
 Therefore, the total number of nodes (`NODES`) is going to be `$MASTERS * ( $SLAVES_PER_MASTER  + 1 )` and ports are going to range from `$INITIAL_PORT` to `$INITIAL_PORT + NODES - 1`.
 
@@ -141,6 +141,15 @@ Also note that the number of sentinels (if enabled) is the same as the number of
           INITIAL_PORT: 9000,
           MASTERS: 2,
           SLAVES_PER_MASTER: 2
+
+
+## Enable client authentication
+
+Client authentication using a password is not enabled by default. By configuring a password string using following environment variable a client is required to authenticate itself using the AUTH command.
+
+| Environment variable | Default                                    |
+| -------------------- | ------------------------------------------ |
+| `PASSWORD`           | "" (requirepass/masterauth not configured) |
 
 
 ## Build alternative redis versions
