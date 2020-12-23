@@ -31,7 +31,7 @@ help:
 	@echo "  pull-releases-4.0"
 	@echo "  pull-releases-5.0"
 	@echo "  pull-releases-6.0"
-	@echo "  pull-releases-latest"
+	@echo "  pull-latest"
 	@echo "  pull-all"
 
 build:
