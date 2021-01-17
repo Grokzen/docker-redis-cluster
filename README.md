@@ -9,6 +9,21 @@ Docker image with redis built and installed from source and a cluster is built.
 To find all redis-server releases see them here https://github.com/antirez/redis/releases
 
 
+## Discussions, help, guides
+
+Github have recently released their `Discussions` feature into beta for more repositories across the github space. This feature is enabled on this repo since a while back.
+
+Becuase we now have this feature, the issues feature will NOT be a place where you can now ask general questions or need simple help with this repo and what it provides.
+
+What can you expect to find in there?
+
+ - A place where you can freely ask any question regarding this repo.
+ - Ask questions like `how do i do X?`
+ - General help with problems with this repo
+ - Guides written by me or any other contributer with useful examples and ansers to commonly asked questions and how to resolve thos problems.
+ - Approved answers to questions marked and promoted by me if help is provided by the community regarding some questions
+
+
 ## What this repo and container IS
 
 This repo exists as a resource to make it quick and simple to get a redis cluster up and running with no fuzz or issues with mininal effort. The primary use for this container is to get a cluster up and running in no time that you can use for demo/presentation/development. It is not intended or built for anything else.
