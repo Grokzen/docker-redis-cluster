@@ -13,6 +13,7 @@ help:
 	@echo "  build-4.0"
 	@echo "  build-5.0"
 	@echo "  build-6.0"
+	@echo "  build-6.2"
 	@echo "  build-latest"
 	@echo "  build-all"
 	@echo "----------"
@@ -22,6 +23,7 @@ help:
 	@echo "  push-releases-4.0"
 	@echo "  push-releases-5.0"
 	@echo "  push-releases-6.0"
+	@echo "  push-releases-6.2"
 	@echo "  push-releases-latest"
 	@echo "  push-all"
 	@echo "----------"
@@ -31,6 +33,7 @@ help:
 	@echo "  pull-releases-4.0"
 	@echo "  pull-releases-5.0"
 	@echo "  pull-releases-6.0"
+	@echo "  pull-releases-6.2"
 	@echo "  pull-latest"
 	@echo "  pull-all"
 
@@ -136,10 +139,17 @@ build-6.0:
 	wait
 	echo "All 6.0.x builds now completed"
 
+build-6.2:
+	@docker build --build-arg redis_version=6.2-rc1 -t grokzen/redis-cluster:6.2-rc1 . &
+	@docker build --build-arg redis_version=6.2-rc2 -t grokzen/redis-cluster:6.2-rc2 . &
+	echo "All 6.2.x builds started as background jobs... Will now wait for them to complete building"
+	wait
+	echo "All 6.2.x builds now completed"
+
 build-latest:
 	docker build --build-arg redis_version=6.0.10 -t grokzen/redis-cluster:latest .
 
-build-all: build-3.0 build-3.2 build-4.0 build-5.0 build-6.0 build-latest
+build-all: build-3.0 build-3.2 build-4.0 build-5.0 build-6.0 build-6.2 build-latest
 
 push-releases-3.0:
 	@docker push grokzen/redis-cluster:3.0.0 &
@@ -224,10 +234,17 @@ push-releases-6.0:
 	wait
 	echo "Upload completed..."
 
+push-releases-6.2:
+	@docker push grokzen/redis-cluster:6.2-rc1 &
+	@docker push grokzen/redis-cluster:6.2-rc2 &
+	echo "Pushing all 6.2.x releases to docker-hub... waiting for task to finish"
+	wait
+	echo "Upload completed..."
+
 push-latest:
 	@docker push grokzen/redis-cluster:latest
 
-push-all: push-releases-3.0 push-releases-3.2 push-releases-4.0 push-releases-5.0 push-releases-6.0 push-latest
+push-all: push-releases-3.0 push-releases-3.2 push-releases-4.0 push-releases-5.0 push-releases-6.0 push-releases-6.2 push-latest
 
 
 #
@@ -302,7 +319,11 @@ pull-releases-6.0:
 	@docker pull grokzen/redis-cluster:6.0.9 &
 	@docker pull grokzen/redis-cluster:6.0.10 &
 
+pull-releases-6.2:
+	@docker pull grokzen/redis-cluster:6.2-rc1 &
+	@docker pull grokzen/redis-cluster:6.2-rc2 &
+
 pull-latest:
 	@docker pull grokzen/redis-cluster:latest
 
-pull-all: pull-releases-3.0 pull-releases-3.2 pull-releases-4.0 pull-releases-5.0 pull-releases-6.0 pull-latest
+pull-all: pull-releases-3.0 pull-releases-3.2 pull-releases-4.0 pull-releases-5.0 pull-releases-6.0 pull-releases-6.2 pull-latest
