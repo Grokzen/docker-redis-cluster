@@ -211,6 +211,7 @@ Redis 6.0.x versions:
 
 Redis 5.0.x version:
 
+- 5.0.10
 - 5.0.9
 - 5.0.8
 - 5.0.7
