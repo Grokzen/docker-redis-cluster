@@ -1,15 +1,18 @@
-version: '2'
+version: "2"
 services:
   redis-cluster:
     environment:
-     IP: ${REDIS_CLUSTER_IP}
-     SENTINEL: ${REDIS_USE_SENTINEL}
-     STANDALONE: ${REDIS_USE_STANDALONE}
+      IP: ${REDIS_CLUSTER_IP}
+      SENTINEL: ${REDIS_USE_SENTINEL}
+      STANDALONE: ${REDIS_USE_STANDALONE}
+      DEFAULT_PASSWORD: ${REDIS_DEFAULT_PASSWORD}
+      USER_NAME: ${REDIS_USER_NAME}
+      USER_PASSWORD: ${REDIS_USER_PASSWORD}
     build:
       context: .
       args:
-        redis_version: '6.0.10'
+        redis_version: "6.0.10"
     hostname: server
     ports:
-      - '7000-7050:7000-7050'
-      - '5000-5010:5000-5010'
+      - "7000-7050:7000-7050"
+      - "5000-5010:5000-5010"

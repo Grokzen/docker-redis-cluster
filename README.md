@@ -8,7 +8,6 @@ Docker image with redis built and installed from source and a cluster is built.
 
 To find all redis-server releases see them here https://github.com/antirez/redis/releases
 
-
 ## Discussions, help, guides
 
 Github have recently released their `Discussions` feature into beta for more repositories across the github space. This feature is enabled on this repo since a while back.
@@ -17,12 +16,11 @@ Becuase we now have this feature, the issues feature will NOT be a place where y
 
 What can you expect to find in there?
 
- - A place where you can freely ask any question regarding this repo.
- - Ask questions like `how do i do X?`
- - General help with problems with this repo
- - Guides written by me or any other contributer with useful examples and ansers to commonly asked questions and how to resolve thos problems.
- - Approved answers to questions marked and promoted by me if help is provided by the community regarding some questions
-
+- A place where you can freely ask any question regarding this repo.
+- Ask questions like `how do i do X?`
+- General help with problems with this repo
+- Guides written by me or any other contributer with useful examples and ansers to commonly asked questions and how to resolve thos problems.
+- Approved answers to questions marked and promoted by me if help is provided by the community regarding some questions
 
 ## What this repo and container IS
 
@@ -32,7 +30,6 @@ I also aim to have every single release of redis that supports a cluster availab
 
 I personally use this to develop redis cluster client code https://github.com/Grokzen/redis-py-cluster
 
-
 ## What this repo and container IS NOT
 
 This container that i have built is not supposed to be some kind of production container or one that is used within any environment other then running locally on your machine. It is not ment to be run on kubernetes or in any other prod/stage/test/dev environment as a fully working commponent in that environment. If that works for you and your use-case then awesome. But this container will not change to fit any other primary solution then to be used locally on your machine.
@@ -40,7 +37,6 @@ This container that i have built is not supposed to be some kind of production c
 If you are looking for something else or some production quality or kubernetes compatible solution then you are looking in the wrong repo. There is other projects or forks of this repo that is compatible for that situation/solution.
 
 For all other purposes other then what has been stated you are free to fork and/or rebuild this container using it as a template for what you need.
-
 
 ## Redis instances inside the container
 
@@ -50,10 +46,7 @@ If the flag `-e "STANDALONE=true"` is passed there are, by default, 2 standalone
 
 If the flag `-e "SENTINEL=true"` is passed there are 3 Sentinel nodes running on ports 5000 to 5002 matching cluster's master instances.
 
-
 This image requires at least `Docker` version 1.10 but the latest version is recommended.
-
-
 
 # Important for Mac users
 
@@ -72,8 +65,6 @@ If you are downloading the container from dockerhub, you must add the internal I
 ```
 docker run -e "IP=0.0.0.0" -p 7000-7005:7000-7005 grokzen/redis-cluster:latest
 ```
-
-
 
 # Usage
 
@@ -97,7 +88,6 @@ Or the built redis-cli tool inside the container that will connect to the cluste
 
     make cli
 
-
 ## Include standalone redis instances
 
 Standalone instances is not enabled by default, but available to use to run 2 standalone redis instances that is not clustered.
@@ -115,7 +105,6 @@ When running with docker-compose, set the environment variable on your system `R
         environment:
           STANDALONE: 'true'
 
-
 ## Include sentinel instances
 
 Sentinel instances is not enabled by default.
@@ -131,18 +120,17 @@ When running with docker-compose set the environment variable on your system `RE
         environment:
           SENTINEL: 'true'
 
-
 ## Change number of nodes
 
 Be default, it is going to launch 3 masters with 1 slave per master. This is configurable through a number of environment variables:
 
 | Environment variable | Default |
-| -------------------- |--------:|
+| -------------------- | ------: |
 | `INITIAL_PORT`       |    7000 |
 | `MASTERS`            |       3 |
-| `SLAVES_PER_MASTER`  |       1 | 
+| `SLAVES_PER_MASTER`  |       1 |
 
-Therefore, the total number of nodes (`NODES`) is going to be `$MASTERS * ( $SLAVES_PER_MASTER  + 1 )` and ports are going to range from `$INITIAL_PORT` to `$INITIAL_PORT + NODES - 1`.
+Therefore, the total number of nodes (`NODES`) is going to be `$MASTERS * ( $SLAVES_PER_MASTER + 1 )` and ports are going to range from `$INITIAL_PORT` to `$INITIAL_PORT + NODES - 1`.
 
 At the docker-compose provided by this repository, ports 7000-7050 are already mapped to the hosts'. Either if you need more than 50 nodes in total or if you need to change the initial port number, you should override those values.
 
@@ -156,7 +144,6 @@ Also note that the number of sentinels (if enabled) is the same as the number of
           INITIAL_PORT: 9000,
           MASTERS: 2,
           SLAVES_PER_MASTER: 2
-
 
 ## IPv6 support
 
@@ -174,11 +161,78 @@ Unfortunately Docker does not handle IPv6 NAT so, when acceptable, `--network ho
     # Example using plain docker
     docker run -e "IP=::1" -e "BIND_ADDRESS=::" --network host grokzen/redis-cluster:latest
 
+## Authentication
+
+Authentication is controlled by environment variables on your machine at the time the docker container is built. There are two users you can control and they can be set independently.
+<br>
+
+##### Default user
+
+The `default` user is a special user name in Redis. It is the user that can authenticate into the cluster using just a password. It is also the user that the cluster nodes use to authenticate into the cluster itself. By default, Redis does not assign a password to user `default`. If the environment variable `REDIS_DEFAULT_PASSWORD` is set, then you must provide a password before issuing any Redis commands in redis-cli. Your application must provide a password to authenticate into the cluster as well.
+
+To build the cluster with the default password, from the docker-redis-cluster directory:
+
+```
+export REDIS_DEFAULT_PASSORD=yourfavoritepassword
+MAKE BUILD
+MAKE UP
+```
+
+After the cluster is running, in a new terminal window
+
+```
+% redis-cli -c -p 7000
+127.0.0.1:7000> cluster nodes
+NOAUTH Authentication required
+127.0.0.1:7000> AUTH yourfavoritepassword
+OK
+127.0.0.1:7000> cluster nodes
+6edadac1532e3332d45ef31528355cf88da01689 127.0.0.1:7002@17002 master - 0 1611433806048 3 connected 10923-16383
+.
+.
+.
+
+```
+
+<br>
+
+##### Custom User
+
+To create a custom user in your Redis cluster, add two environment variables: `REDIS_USER_NAME` and `REDIS_USER_PASSWORD`. The user created has full access to the system. To experiment with different kinds of access, edit the `default-user.tmpl` file. See https://redis.io/commands/acl-setuser for more information on configuring ACLs.
+
+To build the cluster with the default password, from the docker-redis-cluster directory:
+
+```
+export REDIS_USER_NAME=username
+export REDIS_USER_PASSWORD=userpassword
+MAKE BUILD
+MAKE UP
+```
+
+After the cluster is running, in a new terminal window
+
+```
+% redis-cli -c -p 7000
+127.0.0.1:7000> cluster nodes
+NOAUTH Authentication required
+127.0.0.1:7000> AUTH username userpassword
+OK
+127.0.0.1:7000> cluster nodes
+6edadac1532e3332d45ef31528355cf88da01689 127.0.0.1:7002@17002 master - 0 1611433806048 3 connected 10923-16383
+.
+.
+.
+
+```
+
+<br>
+##### Using user `default` in combination with a custom user
+If you are testing with a custom user, it is recommeded to also set a password for user `default`.   The reason is that you may accidentally authenticate to Redis as user `default`. Without a password, Redis sets a `nopass` ACL and quietly authenticates as user `default` when no other credentials are provided.  By setting a password for user `default`, authentication will be required before Redis will allow commands to be issued.  When both set, you can authenticate either as default or the custom user.
+<br>
 
 ## Build alternative redis versions
 
 For a release to be buildable it needs to be present at this url: http://download.redis.io/releases/
-
 
 ### docker build
 
@@ -187,15 +241,12 @@ To build a different redis version use the argument `--build-arg` argument.
     # Example plain docker
     docker build --build-arg redis_version=4.0.13 -t grokzen/redis-cluster .
 
-
 ### docker-compose
 
 To build a different redis version use the `--build-arg` argument.
 
     # Example docker-compose
     docker-compose build --build-arg "redis_version=4.0.13" redis-cluster
-
-
 
 # Available tags
 
@@ -283,7 +334,6 @@ Redis 3.0.x versions:
 - 3.0.2
 - 3.0.1
 - 3.0.0
-
 
 # License
 
