@@ -42,6 +42,13 @@ If you are looking for something else or some production quality or kubernetes c
 For all other purposes other then what has been stated you are free to fork and/or rebuild this container using it as a template for what you need.
 
 
+## Redis major version support and docker.hub availability
+
+Starting from `2020-04-01` this repo will only support and make available on docker.hub all minor versions in the latest 3 major versions of redis-server software. At this date the tags on docker.hub for major versions 3.0, 3.2 & 4.0 will be removed and only 5.0, 6.0 & 6.2 will be available to download. This do not mean that you will not be able to build your desired version from this repo but there is no guarantees or support or hacks that will support this out of the box.
+
+Moving forward when a new major release is shipped out, at the first minor release X.Y.1 version of the next major release, all tags from the last supported major version will be removed from docker.hub. This will give some time for the community to adapt and move forward in the versions before the older major version is removed from docker.hub.
+
+
 ## Redis instances inside the container
 
 The cluster is 6 redis instances running with 3 master & 3 slaves, one slave for each master. They run on ports 7000 to 7005.
