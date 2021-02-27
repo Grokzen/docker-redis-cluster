@@ -120,6 +120,7 @@ build-5.0:
 	@docker build --build-arg redis_version=5.0.8 -t grokzen/redis-cluster:5.0.8 . &
 	@docker build --build-arg redis_version=5.0.9 -t grokzen/redis-cluster:5.0.9 . &
 	@docker build --build-arg redis_version=5.0.10 -t grokzen/redis-cluster:5.0.10 . &
+	@docker build --build-arg redis_version=5.0.11 -t grokzen/redis-cluster:5.0.11 . &
 	echo "All 5.0.x builds started as background jobs... Will now wait for them to complete building"
 	wait
 	echo "All 5.0.x builds now completed"
@@ -136,6 +137,7 @@ build-6.0:
 	@docker build --build-arg redis_version=6.0.8 -t grokzen/redis-cluster:6.0.8 . &
 	@docker build --build-arg redis_version=6.0.9 -t grokzen/redis-cluster:6.0.9 . &
 	@docker build --build-arg redis_version=6.0.10 -t grokzen/redis-cluster:6.0.10 . &
+	@docker build --build-arg redis_version=6.0.11 -t grokzen/redis-cluster:6.0.11 . &
 	echo "All 6.0.x builds started as background jobs... Will now wait for them to complete building"
 	wait
 	echo "All 6.0.x builds now completed"
@@ -143,12 +145,13 @@ build-6.0:
 build-6.2:
 	@docker build --build-arg redis_version=6.2-rc1 -t grokzen/redis-cluster:6.2-rc1 . &
 	@docker build --build-arg redis_version=6.2-rc2 -t grokzen/redis-cluster:6.2-rc2 . &
+	@docker build --build-arg redis_version=6.2.0 -t grokzen/redis-cluster:6.2.0 . &
 	echo "All 6.2.x builds started as background jobs... Will now wait for them to complete building"
 	wait
 	echo "All 6.2.x builds now completed"
 
 build-latest:
-	docker build --build-arg redis_version=6.0.10 -t grokzen/redis-cluster:latest .
+	docker build --build-arg redis_version=6.2.0 -t grokzen/redis-cluster:latest .
 
 build-all: build-3.0 build-3.2 build-4.0 build-5.0 build-6.0 build-6.2 build-latest
 
@@ -216,6 +219,7 @@ push-releases-5.0:
 	@docker push grokzen/redis-cluster:5.0.8 &
 	@docker push grokzen/redis-cluster:5.0.9 &
 	@docker push grokzen/redis-cluster:5.0.10 &
+	@docker push grokzen/redis-cluster:5.0.11 &
 	echo "Pushing all 5.0.x releases to docker-hub... waiting for task to finish"
 	wait
 	echo "Upload completed..."
@@ -232,6 +236,7 @@ push-releases-6.0:
 	@docker push grokzen/redis-cluster:6.0.8 &
 	@docker push grokzen/redis-cluster:6.0.9 &
 	@docker push grokzen/redis-cluster:6.0.10 &
+	@docker push grokzen/redis-cluster:6.0.11 &
 	echo "Pushing all 6.0.x releases to docker-hub... waiting for task to finish"
 	wait
 	echo "Upload completed..."
@@ -239,6 +244,7 @@ push-releases-6.0:
 push-releases-6.2:
 	@docker push grokzen/redis-cluster:6.2-rc1 &
 	@docker push grokzen/redis-cluster:6.2-rc2 &
+	@docker push grokzen/redis-cluster:6.2.0 &
 	echo "Pushing all 6.2.x releases to docker-hub... waiting for task to finish"
 	wait
 	echo "Upload completed..."
@@ -308,6 +314,7 @@ pull-releases-5.0:
 	@docker pull grokzen/redis-cluster:5.0.8 &
 	@docker pull grokzen/redis-cluster:5.0.9 &
 	@docker pull grokzen/redis-cluster:5.0.10 &
+	@docker pull grokzen/redis-cluster:5.0.11 &
 
 pull-releases-6.0:
 	@docker pull grokzen/redis-cluster:6.0.0 &
@@ -321,10 +328,12 @@ pull-releases-6.0:
 	@docker pull grokzen/redis-cluster:6.0.8 &
 	@docker pull grokzen/redis-cluster:6.0.9 &
 	@docker pull grokzen/redis-cluster:6.0.10 &
+	@docker pull grokzen/redis-cluster:6.0.11 &
 
 pull-releases-6.2:
 	@docker pull grokzen/redis-cluster:6.2-rc1 &
 	@docker pull grokzen/redis-cluster:6.2-rc2 &
+	@docker pull grokzen/redis-cluster:6.2.0 &
 
 pull-latest:
 	@docker pull grokzen/redis-cluster:latest

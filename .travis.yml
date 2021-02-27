@@ -1,3 +1,4 @@
+# This travis run should only test and build the latest version of all major redis-server versions
 language: python
 python:
   - "3.5"
@@ -7,7 +8,8 @@ env:
   - REDIS_VERSION=3.0.7
   - REDIS_VERSION=3.2.13
   - REDIS_VERSION=4.0.14
-  - REDIS_VERSION=5.0.10
-  - REDIS_VERSION=6.0.10
+  - REDIS_VERSION=5.0.11
+  - REDIS_VERSION=6.0.11
+  - REDIS_VERSION=6.2.0
 script:
   docker build --build-arg redis_version=$REDIS_VERSION -t grokzen/redis-cluster .
