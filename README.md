@@ -84,6 +84,39 @@ docker run -e "IP=0.0.0.0" -p 7000-7005:7000-7005 grokzen/redis-cluster:latest
 
 # Usage
 
+This git repo is using `pyinvoke` to pull, build, push docker images. You can use it to build your own images if you like.
+
+The invoke scripts in this repo is written only for python 3.7 and above
+
+Install `pyinvoke` with `pip install invoke`.
+
+This script will run `N num of cpu - 1` parralell tasks based on your version input.
+
+To see available commands run `invoke -l` in the root folder of this repo. Example
+
+```
+(tmp-615229a94c330b9) ➜  docker-redis-cluster git:(pyinvoke) ✗ invoke -l
+"Configured multiprocess pool size: 3
+Available tasks:
+
+  build
+  pull
+  push
+```
+
+Each command is only taking one required positional argument `version`. Example:
+
+```
+(tmp-615229a94c330b9) ➜  docker-redis-cluster git:(pyinvoke) ✗ invoke build 6.0
+...
+```
+
+and it will run the build step on all versions that starts with 6.0.
+
+The only other optional usefull argument is `--cpu=N` and it will set how many paralell processes will be used
+
+Makefile still has a few docker-compose commands that can be used
+
 To build your own image run:
 
     make build
