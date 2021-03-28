@@ -48,6 +48,8 @@ Starting from `2020-04-01` this repo will only support and make available on doc
 
 Moving forward when a new major release is shipped out, at the first minor release X.Y.1 version of the next major release, all tags from the last supported major version will be removed from docker.hub. This will give some time for the community to adapt and move forward in the versions before the older major version is removed from docker.hub.
 
+This major version schema support follows the same major version support that redis itself use.
+
 
 ## Redis instances inside the container
 
@@ -113,7 +115,10 @@ Each command is only taking one required positional argument `version`. Example:
 
 and it will run the build step on all versions that starts with 6.0.
 
-The only other optional usefull argument is `--cpu=N` and it will set how many paralell processes will be used
+The only other optional usefull argument is `--cpu=N` and it will set how many paralell processes will be used. By default you will use n - 1 number of cpu cores that is available on your system. Commands like pull and push aare not very cpu intensive so using a higher number here might speed things up if you have good network bandwidth.
+
+
+## Makefile (legacy)
 
 Makefile still has a few docker-compose commands that can be used
 
@@ -148,12 +153,12 @@ If running with plain docker run
 
 When running with docker-compose, set the environment variable on your system `REDIS_USE_STANDALONE=true` and start your container or modify the `docker-compose.yml` file
 
-      version: '2'
-      services:
-        redis-cluster:
-          ...
-        environment:
-          STANDALONE: 'true'
+    version: '2'
+    services:
+      redis-cluster:
+        ...
+      environment:
+        STANDALONE: 'true'
 
 
 ## Include sentinel instances
@@ -164,12 +169,12 @@ If running with plain docker send in `-e SENTINEL=true`.
 
 When running with docker-compose set the environment variable on your system `REDIS_USE_SENTINEL=true` and start your container.
 
-      version: '2'
-      services:
-        redis-cluster:
-          ...
-        environment:
-          SENTINEL: 'true'
+    version: '2'
+    services:
+      redis-cluster:
+        ...
+      environment:
+        SENTINEL: 'true'
 
 
 ## Change number of nodes
@@ -188,14 +193,14 @@ At the docker-compose provided by this repository, ports 7000-7050 are already m
 
 Also note that the number of sentinels (if enabled) is the same as the number of masters. The docker-compose file already maps ports 5000-5010 by default. You should also override those values if you have more than 10 masters.
 
-      version: '2'
-      services:
-        redis-cluster:
-          ...
-        environment:
-          INITIAL_PORT: 9000,
-          MASTERS: 2,
-          SLAVES_PER_MASTER: 2
+    version: '2'
+    services:
+      redis-cluster:
+        ...
+      environment:
+        INITIAL_PORT: 9000,
+        MASTERS: 2,
+        SLAVES_PER_MASTER: 2
 
 
 ## IPv6 support
@@ -243,16 +248,18 @@ The following tags with pre-built images is available on `docker-hub`.
 
 Latest release in the most recent stable branch will be used as `latest` version.
 
-- latest == 6.2.0
+- latest == 6.2.1
 
 Redis 6.2.x versions:
 
+- 6.2.1
 - 6.2.0
 - 6.2-rc2
 - 6.2-rc1
 
 Redis 6.0.x versions:
 
+- 6.0.12
 - 6.0.11
 - 6.0.10
 - 6.0.9
@@ -268,6 +275,7 @@ Redis 6.0.x versions:
 
 Redis 5.0.x version:
 
+- 5.0.12
 - 5.0.11
 - 5.0.10
 - 5.0.9
