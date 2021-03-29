@@ -37,6 +37,8 @@ RUN mkdir /redis-conf && mkdir /redis-data
 COPY redis-cluster.tmpl /redis-conf/redis-cluster.tmpl
 COPY redis.tmpl         /redis-conf/redis.tmpl
 COPY sentinel.tmpl      /redis-conf/sentinel.tmpl
+COPY default-user.tmpl  /redis-conf/default-user.tmpl
+COPY custom-user.tmpl   /redis-conf/custom-user.tmpl
 
 # Add startup script
 COPY docker-entrypoint.sh /docker-entrypoint.sh

@@ -69,6 +69,24 @@ if [ "$1" = 'redis-cluster' ]; then
         fi
       fi
 
+      # If environment variable REDIS_DEFAULT_PASSWORD had a value when container was built,
+      # append default-user.tmpl to the redis.conf file for this node
+      if [ -z "${DEFAULT_PASSWORD}" ]; then
+        echo "Starting without user 'default' password"
+      else
+        echo "Starting with user 'default' password set"
+        DEFAULT_PASSWORD=${DEFAULT_PASSWORD} envsubst < /redis-conf/default-user.tmpl >> /redis-conf/${port}/redis.conf
+      fi
+
+      # If environment USER_NAME has a value when container was built,
+      # append custom-user.tmpl to the redis.conf file for this node
+      if [ -z "${USER_NAME}" ]; then
+        echo "Starting without custom user"
+      else
+        echo "Starting with custom user ${USER_NAME}"
+        USER_NAME=${USER_NAME} USER_PASSWORD=${USER_PASSWORD} envsubst < /redis-conf/custom-user.tmpl >> /redis-conf/${port}/redis.conf
+      fi
+
     done
 
     bash /generate-supervisor-conf.sh $INITIAL_PORT $max_port > /etc/supervisor/supervisord.conf
@@ -88,7 +106,13 @@ if [ "$1" = 'redis-cluster' ]; then
       echo "yes" | eval ruby /redis/src/redis-trib.rb create --replicas "$SLAVES_PER_MASTER" "$nodes"
     else
       echo "Using redis-cli to create the cluster"
-      echo "yes" | eval /redis/src/redis-cli --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$nodes"
+      # If default user has a required password, it is necessary to pass the password as -a
+      # in order for the cluster nodes to be able to authenticate to the cluster.
+      if [ -z "${DEFAULT_PASSWORD}" ]; then
+        echo "yes" | eval /redis/src/redis-cli  --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$nodes"
+      else
+        echo "yes" | eval /redis/src/redis-cli  --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$nodes" -a "${DEFAULT_PASSWORD}"
+      fi
     fi
 
     if [ "$SENTINEL" = "true" ]; then
