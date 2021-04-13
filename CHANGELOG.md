@@ -1,4 +1,4 @@
-## 2021-04-01
+## 2021-04-13
 
 * Dropped the availability of redis-server major versions 3.0, 3.2, 4.0 from docker.hub
 

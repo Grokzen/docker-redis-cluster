@@ -55,8 +55,6 @@ This major version schema support follows the same major version support that re
 
 The cluster is 6 redis instances running with 3 master & 3 slaves, one slave for each master. They run on ports 7000 to 7005.
 
-If the flag `-e "STANDALONE=true"` is passed there are, by default, 2 standalone instances running on port 7006 and 7007. However, you can set this variable to a number of standalone nodes you want, e.g., `-e "STANDALONE=1"`. Note the standalone ports start right after the last slave.
-
 If the flag `-e "SENTINEL=true"` is passed there are 3 Sentinel nodes running on ports 5000 to 5002 matching cluster's master instances.
 
 
@@ -141,24 +139,6 @@ To connect to your cluster you can use the redis-cli tool:
 Or the built redis-cli tool inside the container that will connect to the cluster inside the container
 
     make cli
-
-
-## Include standalone redis instances
-
-Standalone instances is not enabled by default, but available to use to run 2 standalone redis instances that is not clustered.
-
-If running with plain docker run
-
-    docker run ... -e STANDALONE=true ...
-
-When running with docker-compose, set the environment variable on your system `REDIS_USE_STANDALONE=true` and start your container or modify the `docker-compose.yml` file
-
-    version: '2'
-    services:
-      redis-cluster:
-        ...
-      environment:
-        STANDALONE: 'true'
 
 
 ## Include sentinel instances
@@ -289,51 +269,14 @@ Redis 5.0.x version:
 - 5.0.1
 - 5.0.0
 
-Redis 4.0.x versions:
 
-- 4.0.14
-- 4.0.13
-- 4.0.12
-- 4.0.11
-- 4.0.10
-- 4.0.9
-- 4.0.8
-- 4.0.7
-- 4.0.6
-- 4.0.5
-- 4.0.4
-- 4.0.3
-- 4.0.2
-- 4.0.1
-- 4.0.0
+## Unavailable major versions
 
-Redis 3.2.x versions:
+The following major versions is no longer available to be downloaded from docker.hub. You can still build and run them directly from this repo.
 
-- 3.2.13
-- 3.2.12
-- 3.2.11
-- 3.2.10
-- 3.2.9
-- 3.2.8
-- 3.2.7
-- 3.2.6
-- 3.2.5
-- 3.2.4
-- 3.2.3
-- 3.2.2
-- 3.2.1
-- 3.2.0
-
-Redis 3.0.x versions:
-
-- 3.0.7
-- 3.0.6
-- 3.0.5
-- 3.0.4
-- 3.0.3
-- 3.0.2
-- 3.0.1
-- 3.0.0
+- 4.0
+- 3.2
+- 3.0
 
 
 # License
