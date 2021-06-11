@@ -199,6 +199,14 @@ Unfortunately Docker does not handle IPv6 NAT so, when acceptable, `--network ho
     # Example using plain docker
     docker run -e "IP=::1" -e "BIND_ADDRESS=::" --network host grokzen/redis-cluster:latest
 
+## Enable authentication
+By default, authentication using a password is disabled.
+This is configurable by an enviroment variable that specifies which a password string is required to authenticate itself using the AUTH command.
+
+| Environment variable | Default                                    |
+| -------------------- | ------------------------------------------ |
+| `PASSWORD`           | "" (requirepass/masterauth not configured) |
+
 
 ## Build alternative redis versions
 
