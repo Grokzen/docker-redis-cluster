@@ -63,7 +63,10 @@ if [ "$1" = 'redis-cluster' ]; then
         PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} REQUIREPASS=${requirepass} MASTERAUTH=${masterauth} envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
         nodes="$nodes $IP:$port"
       else
-        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} envsubst < /redis-conf/redis.tmpl > /redis-conf/${port}/redis.conf
+        if [ -n "$PASSWORD" ]; then
+          requirepass="requirepass '${PASSWORD}'"
+        fi
+        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} REQUIREPASS=${requirepass} envsubst < /redis-conf/redis.tmpl > /redis-conf/${port}/redis.conf
       fi
 
       if [ "$port" -lt $(($INITIAL_PORT + $MASTERS)) ]; then
