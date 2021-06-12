@@ -54,19 +54,25 @@ if [ "$1" = 'redis-cluster' ]; then
       if [ -e /redis-data/${port}/appendonly.aof ]; then
         rm /redis-data/${port}/appendonly.aof
       fi
+      
+      if [ -z "$PROTECTED_MODE" -o "$PROTECTED_MODE" = "true" ]; then
+      	protectedmode="prorected-mode 'yes'"
+      elif [ "$PROTECTED_MODE" = "false" ]; then
+      	protectedmode="prorected-mode 'no'"
+      fi
 
       if [ "$port" -lt "$first_standalone" ]; then
         if [ -n "$PASSWORD" ]; then
           requirepass="requirepass '${PASSWORD}'"
           masterauth="masterauth '${PASSWORD}'"
         fi
-        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} REQUIREPASS=${requirepass} MASTERAUTH=${masterauth} envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
+        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} REQUIREPASS=${requirepass} MASTERAUTH=${masterauth} PROTECTED_MODE=${protectedmode} envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
         nodes="$nodes $IP:$port"
       else
         if [ -n "$PASSWORD" ]; then
           requirepass="requirepass '${PASSWORD}'"
         fi
-        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} REQUIREPASS=${requirepass} envsubst < /redis-conf/redis.tmpl > /redis-conf/${port}/redis.conf
+        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} REQUIREPASS=${requirepass} PROTECTED_MODE=${protectedmode} envsubst < /redis-conf/redis.tmpl > /redis-conf/${port}/redis.conf
       fi
 
       if [ "$port" -lt $(($INITIAL_PORT + $MASTERS)) ]; then

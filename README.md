@@ -207,6 +207,14 @@ This is configurable by an enviroment variable that specifies which a password s
 | -------------------- | ------------------------------------------ |
 | `PASSWORD`           | "" (requirepass/masterauth not configured) |
 
+## Protected mode
+By default, Protected mode is enabled.
+This is configurable by an enviroment variable that specifies which the system administator can still ignore the error given by Redis and just disable protected mode or manually bind all the interfaces.
+
+| Environment variable | Default                                    |
+| -------------------- | ------------------------------------------ |
+| `PROTECTED_MODE`           | "" (protected-mode is yes) |
+
 
 ## Build alternative redis versions
 
