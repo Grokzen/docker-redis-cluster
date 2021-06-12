@@ -56,9 +56,9 @@ if [ "$1" = 'redis-cluster' ]; then
       fi
       
       if [ -z "$PROTECTED_MODE" -o "$PROTECTED_MODE" = "true" ]; then
-      	protectedmode="prorected-mode 'yes'"
+      	protectedmode="prorected-mode yes"
       elif [ "$PROTECTED_MODE" = "false" ]; then
-      	protectedmode="prorected-mode 'no'"
+      	protectedmode="prorected-mode no"
       fi
 
       if [ "$port" -lt "$first_standalone" ]; then
