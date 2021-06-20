@@ -54,12 +54,25 @@ if [ "$1" = 'redis-cluster' ]; then
       if [ -e /redis-data/${port}/appendonly.aof ]; then
         rm /redis-data/${port}/appendonly.aof
       fi
+      
+      if [ -z "$PROTECTED_MODE" -o "$PROTECTED_MODE" = "true" ]; then
+      	protectedmode="protected-mode yes"
+      elif [ "$PROTECTED_MODE" = "false" ]; then
+      	protectedmode="protected-mode no"
+      fi
 
       if [ "$port" -lt "$first_standalone" ]; then
-        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
+        if [ -n "$PASSWORD" ]; then
+          requirepass="requirepass '${PASSWORD}'"
+          masterauth="masterauth '${PASSWORD}'"
+        fi
+        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} REQUIREPASS=${requirepass} MASTERAUTH=${masterauth} PROTECTED_MODE=${protectedmode} envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
         nodes="$nodes $IP:$port"
       else
-        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} envsubst < /redis-conf/redis.tmpl > /redis-conf/${port}/redis.conf
+        if [ -n "$PASSWORD" ]; then
+          requirepass="requirepass '${PASSWORD}'"
+        fi
+        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} REQUIREPASS=${requirepass} PROTECTED_MODE=${protectedmode} envsubst < /redis-conf/redis.tmpl > /redis-conf/${port}/redis.conf
       fi
 
       if [ "$port" -lt $(($INITIAL_PORT + $MASTERS)) ]; then
@@ -88,7 +101,12 @@ if [ "$1" = 'redis-cluster' ]; then
       echo "yes" | eval ruby /redis/src/redis-trib.rb create --replicas "$SLAVES_PER_MASTER" "$nodes"
     else
       echo "Using redis-cli to create the cluster"
-      echo "yes" | eval /redis/src/redis-cli --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$nodes"
+      if [ -z "$PASSWORD"  ]; then
+        echo "yes" | eval /redis/src/redis-cli --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$nodes"
+        password_arg="-a $PASSWORD"
+      else
+        echo "yes" | eval /redis/src/redis-cli --cluster create --cluster-replicas "$SLAVES_PER_MASTER" -a "$PASSWORD" "$nodes"
+      fi
     fi
 
     if [ "$SENTINEL" = "true" ]; then
