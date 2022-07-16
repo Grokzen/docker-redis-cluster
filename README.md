@@ -215,6 +215,14 @@ This is configurable by an enviroment variable that specifies which the system a
 | -------------------- | ------------------------------------------ |
 | `PROTECTED_MODE`           | "" (protected-mode is yes) |
 
+## Clean redis-data before start redis
+By default, All file in folder redis-data will be remove before start redis.
+This is configurable by an enviroment variable that specifies which the system administator can handle remove/keep all file in redis-data before start redis.
+
+| Environment variable | Default                                    |
+| -------------------- | ------------------------------------------ |
+| `RESET_DATA`           | "" (redis-data will be clean) |
+
 
 ## Build alternative redis versions
 
