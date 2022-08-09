@@ -5,10 +5,8 @@ services:
      IP: ${REDIS_CLUSTER_IP}
      SENTINEL: ${REDIS_USE_SENTINEL}
      STANDALONE: ${REDIS_USE_STANDALONE}
-    build:
-      context: .
-      args:
-        redis_version: '6.2.1'
+    # We are building the image via `make build` which uses buildx since we need it build an multi-arch image.
+    image: grokzen/redis-cluster:local
     hostname: server
     ports:
       - '7000-7050:7000-7050'
