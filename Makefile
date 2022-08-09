@@ -8,7 +8,7 @@ help:
 	@echo "  cli           run redis-cli inside the container on the server with port 7000"
 
 build:
-	docker buildx build --build-arg redis_version=6.2.1 --platform linux/amd64,linux/arm64 --tag grokzen/redis-cluster:latest .
+	docker buildx build --build-arg redis_version=6.2.1 --platform linux/amd64,linux/arm64 --tag grokzen/redis-cluster:local .
 
 up:
 	@echo "Ensure that you have run `make build` to use the latest image"
