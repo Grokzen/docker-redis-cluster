@@ -1,5 +1,5 @@
-# Build based on redis:6.0 from 2020-05-05
-FROM redis@sha256:f7ee67d8d9050357a6ea362e2a7e8b65a6823d9b612bc430d057416788ef6df9
+# Build based on redis:6.2.7
+FROM redis:6.2.7
 
 LABEL maintainer="Johan Andersson <Grokzen@gmail.com>"
 
@@ -10,7 +10,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # Install system dependencies
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -yqq \
-      net-tools supervisor ruby rubygems locales gettext-base wget gcc make g++ build-essential libc6-dev tcl && \
+      net-tools supervisor ruby rubygems locales gettext-base wget gcc make g++ build-essential libc6-dev libssl-dev tcl && \
     apt-get clean -yqq
 
 # # Ensure UTF-8 lang and locale
@@ -24,15 +24,15 @@ ENV SSL_CERT_FILE=/usr/local/etc/openssl/cert.pem
 RUN gem install redis -v 4.1.3
 
 # This will always build the latest release/commit in the 6.0 branch
-ARG redis_version=6.2
+ARG redis_version=6.2.7
 
 RUN wget -qO redis.tar.gz https://github.com/redis/redis/tarball/${redis_version} \
     && tar xfz redis.tar.gz -C / \
     && mv /redis-* /redis
 
-RUN (cd /redis && make)
+RUN (cd /redis && make BUILD_TLS=yes)
 
-RUN mkdir /redis-conf && mkdir /redis-data
+RUN mkdir /redis-conf && mkdir /redis-data && mkdir -p /etc/redis/tls
 
 COPY redis-cluster.tmpl /redis-conf/redis-cluster.tmpl
 COPY redis.tmpl         /redis-conf/redis.tmpl

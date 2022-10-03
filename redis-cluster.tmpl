@@ -1,5 +1,14 @@
 bind ${BIND_ADDRESS}
-port ${PORT}
+
+port 0
+tls-port ${PORT}
+tls-cert-file ${REDIS_TLS_CERT_FILE}
+tls-key-file ${REDIS_TLS_KEY_FILE}
+tls-ca-cert-file ${REDIS_TLS_CA_FILE}
+tls-auth-clients no
+tls-replication yes
+tls-cluster yes
+
 cluster-enabled yes
 cluster-config-file nodes.conf
 cluster-node-timeout 5000

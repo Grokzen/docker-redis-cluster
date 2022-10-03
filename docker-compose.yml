@@ -8,6 +8,10 @@ services:
      DEFAULT_PASSWORD: ${REDIS_DEFAULT_PASSWORD}
      USER_NAME: ${REDIS_USER_NAME}
      USER_PASWWORD: ${REDIS_USER_PASSWORD}
+     REDIS_TLS_CERT_FILE: ${REDIS_TLS_CERT_FILE}
+     REDIS_TLS_KEY_FILE: ${REDIS_TLS_KEY_FILE}
+     REDIS_TLS_CA_FILE: ${REDIS_TLS_CA_FILE}
+     INITIAL_PORT: ${INITIAL_PORT}
     build:
       context: .
       args:
@@ -16,3 +20,5 @@ services:
     ports:
       - '7000-7050:7000-7050'
       - '5000-5010:5000-5010'
+    volumes:
+      - /Users/stevenmoy/noqdev/cloudumi-2/deploy/local/redis/tests/tls/:/etc/redis/tls

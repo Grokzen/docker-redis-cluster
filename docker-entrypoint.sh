@@ -56,7 +56,7 @@ if [ "$1" = 'redis-cluster' ]; then
       fi
 
       if [ "$port" -lt "$first_standalone" ]; then
-        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
+        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} REDIS_TLS_CERT_FILE=${REDIS_TLS_CERT_FILE} REDIS_TLS_KEY_FILE=${REDIS_TLS_KEY_FILE} REDIS_TLS_CA_FILE=${REDIS_TLS_CA_FILE} envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
         nodes="$nodes $IP:$port"
       else
         PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} envsubst < /redis-conf/redis.tmpl > /redis-conf/${port}/redis.conf
@@ -111,7 +111,7 @@ if [ "$1" = 'redis-cluster' ]; then
       if [ -z "${DEFAULT_PASSWORD}" ]; then
         echo "yes" | eval /redis/src/redis-cli  --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$nodes"
       else
-        echo "yes" | eval /redis/src/redis-cli  --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$nodes" -a "${DEFAULT_PASSWORD}"
+        echo "yes" | eval /redis/src/redis-cli --tls  --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$nodes" -a "${DEFAULT_PASSWORD}" --tls --cert $REDIS_TLS_CERT_FILE --key $REDIS_TLS_KEY_FILE --cacert $REDIS_TLS_CA_FILE
       fi
     fi
 
