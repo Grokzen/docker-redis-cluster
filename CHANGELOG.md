@@ -1,3 +1,9 @@
+## 2022-12-18
+
+* Added redis 7.0.x releases and published docker images
+* Dropped redis 5.0.x releases and unpublished docker images
+* Added `invoke list` command to show all possible targets you can build against
+
 ## 2021-04-13
 
 * Dropped the availability of redis-server major versions 3.0, 3.2, 4.0 from docker.hub

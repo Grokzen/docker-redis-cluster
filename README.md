@@ -44,7 +44,7 @@ For all other purposes other then what has been stated you are free to fork and/
 
 ## Redis major version support and docker.hub availability
 
-Starting from `2020-04-01` this repo will only support and make available on docker.hub all minor versions in the latest 3 major versions of redis-server software. At this date the tags on docker.hub for major versions 3.0, 3.2 & 4.0 will be removed and only 5.0, 6.0 & 6.2 will be available to download. This do not mean that you will not be able to build your desired version from this repo but there is no guarantees or support or hacks that will support this out of the box.
+Starting from `2020-04-01` this repo will only support and make available on docker.hub all minor versions in the latest 3 major versions of redis-server software. At this date the tags on docker.hub for major versions 3.0, 3.2 & 4.0, 5.0 will be removed and only 6.0, 6.2, 7.0 will be available to download. This do not mean that you will not be able to build your desired version from this repo but there is no guarantees or support or hacks that will support this out of the box.
 
 Moving forward when a new major release is shipped out, at the first minor release X.Y.1 version of the next major release, all tags from the last supported major version will be removed from docker.hub. This will give some time for the community to adapt and move forward in the versions before the older major version is removed from docker.hub.
 
@@ -228,17 +228,37 @@ The following tags with pre-built images is available on `docker-hub`.
 
 Latest release in the most recent stable branch will be used as `latest` version.
 
-- latest == 6.2.1
+- latest == 7.0.7
+
+Redis 7.0.x version:
+
+- 7.0.7
+- 7.0.6
+- 7.0.5
+- 7.0.4
+- 7.0.3
+- 7.0.2
+- 7.0.1
+- 7.0.0
 
 Redis 6.2.x versions:
 
+- 6.2.8
+- 6.2.7
+- 6.2.6
+- 6.2.5
+- 6.2.4
+- 6.2.3
+- 6.2.2
 - 6.2.1
 - 6.2.0
-- 6.2-rc2
-- 6.2-rc1
 
 Redis 6.0.x versions:
 
+- 6.0.16
+- 6.0.15
+- 6.0.14
+- 6.0.13
 - 6.0.12
 - 6.0.11
 - 6.0.10
@@ -253,27 +273,12 @@ Redis 6.0.x versions:
 - 6.0.1
 - 6.0.0
 
-Redis 5.0.x version:
-
-- 5.0.12
-- 5.0.11
-- 5.0.10
-- 5.0.9
-- 5.0.8
-- 5.0.7
-- 5.0.6
-- 5.0.5
-- 5.0.4
-- 5.0.3
-- 5.0.2
-- 5.0.1
-- 5.0.0
-
 
 ## Unavailable major versions
 
 The following major versions is no longer available to be downloaded from docker.hub. You can still build and run them directly from this repo.
 
+- 5.0
 - 4.0
 - 3.2
 - 3.0

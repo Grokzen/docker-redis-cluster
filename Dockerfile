@@ -24,7 +24,7 @@ ENV SSL_CERT_FILE=/usr/local/etc/openssl/cert.pem
 RUN gem install redis -v 4.1.3
 
 # This will always build the latest release/commit in the 6.0 branch
-ARG redis_version=6.2
+ARG redis_version=7.0
 
 RUN wget -qO redis.tar.gz https://github.com/redis/redis/tarball/${redis_version} \
     && tar xfz redis.tar.gz -C / \
