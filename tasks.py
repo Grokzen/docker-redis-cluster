@@ -3,7 +3,7 @@ from multiprocessing import Pool
 from invoke import task
 
 
-latest_version_string = "7.0.7"
+latest_version_string = "7.0.8"
 
 # Unpublished versions
 version_config_mapping = []
@@ -13,9 +13,9 @@ version_config_mapping += [f"4.0.{i}" for i in range(0, 15)]
 version_config_mapping += [f"5.0.{i}" for i in range(0, 13)]
 
 # Published versions
-version_config_mapping += [f"6.0.{i}" for i in range(0, 17)]
-version_config_mapping += [f"6.2.{i}" for i in range(0, 9)]
-version_config_mapping += [f"7.0.{i}" for i in range(0, 8)]
+version_config_mapping += [f"6.0.{i}" for i in range(0, 18)]
+version_config_mapping += [f"6.2.{i}" for i in range(0, 11)]
+version_config_mapping += [f"7.0.{i}" for i in range(0, 9)]
 
 
 def version_name_to_version(version):
