@@ -4,8 +4,8 @@ if [ "$1" = 'redis-cluster' ]; then
     # Allow passing in cluster IP by argument or environmental variable
     IP="${2:-$IP}"
 
-    if [ -z "$IP" ]; then # If IP is unset then discover it
-        IP=$(hostname -I)
+    if [ -z "$IP" ]; then # If IP is unset then set it to 0.0.0.0
+        IP=0.0.0.0
     fi
 
     echo " -- IP Before trim: '$IP'"
@@ -22,8 +22,8 @@ if [ "$1" = 'redis-cluster' ]; then
       MASTERS=3
     fi
 
-    if [ -z "$SLAVES_PER_MASTER" ]; then # Default to 1 slave for each master
-      SLAVES_PER_MASTER=1
+    if [ -z "$SLAVES_PER_MASTER" ]; then # Default to 0 slave for each master
+      SLAVES_PER_MASTER=0
     fi
 
     if [ -z "$BIND_ADDRESS" ]; then # Default to any IPv4 address

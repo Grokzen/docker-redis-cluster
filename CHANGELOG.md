@@ -1,3 +1,7 @@
+## 2024-02-14
+
+* Change default values for variables: IP and SLAVES_PER_MASTER
+
 ## 2022-12-18
 
 * Added redis 7.0.x releases and published docker images
