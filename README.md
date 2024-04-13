@@ -35,16 +35,16 @@ I personally use this to develop redis cluster client code https://github.com/Gr
 
 ## What this repo and container IS NOT
 
-This container that i have built is not supposed to be some kind of production container or one that is used within any environment other then running locally on your machine. It is not ment to be run on kubernetes or in any other prod/stage/test/dev environment as a fully working commponent in that environment. If that works for you and your use-case then awesome. But this container will not change to fit any other primary solution then to be used locally on your machine.
+This container that i have built is not supposed to be some kind of production container or one that is used within any environment other than running locally on your machine. It is not ment to be run on kubernetes or in any other prod/stage/test/dev environment as a fully working commponent in that environment. If that works for you and your use-case then awesome. But this container will not change to fit any other primary solution than to be used locally on your machine.
 
 If you are looking for something else or some production quality or kubernetes compatible solution then you are looking in the wrong repo. There is other projects or forks of this repo that is compatible for that situation/solution.
 
-For all other purposes other then what has been stated you are free to fork and/or rebuild this container using it as a template for what you need.
+For all other purposes other than what has been stated you are free to fork and/or rebuild this container using it as a template for what you need.
 
 
 ## Redis major version support and docker.hub availability
 
-Starting from `2020-04-01` this repo will only support and make available on docker.hub all minor versions in the latest 3 major versions of redis-server software. At this date the tags on docker.hub for major versions 3.0, 3.2 & 4.0 will be removed and only 5.0, 6.0 & 6.2 will be available to download. This do not mean that you will not be able to build your desired version from this repo but there is no guarantees or support or hacks that will support this out of the box.
+Starting from `2020-04-01` this repo will only support and make available on docker.hub all minor versions in the latest 3 major versions of redis-server software. At this date the tags on docker.hub for major versions 3.0, 3.2 & 4.0, 5.0 will be removed and only 6.0, 6.2, 7.0 will be available to download. This do not mean that you will not be able to build your desired version from this repo but there is no guarantees or support or hacks that will support this out of the box.
 
 Moving forward when a new major release is shipped out, at the first minor release X.Y.1 version of the next major release, all tags from the last supported major version will be removed from docker.hub. This will give some time for the community to adapt and move forward in the versions before the older major version is removed from docker.hub.
 
@@ -84,22 +84,23 @@ docker run -e "IP=0.0.0.0" -p 7000-7005:7000-7005 grokzen/redis-cluster:latest
 
 # Usage
 
-This git repo is using `pyinvoke` to pull, build, push docker images. You can use it to build your own images if you like.
+This git repo is using `invoke` to pull, build, push docker images. You can use it to build your own images if you like.
 
 The invoke scripts in this repo is written only for python 3.7 and above
 
-Install `pyinvoke` with `pip install invoke`.
+Install `invoke` with `pip install invoke`.
 
 This script will run `N num of cpu - 1` parralell tasks based on your version input.
 
 To see available commands run `invoke -l` in the root folder of this repo. Example
 
 ```
-(tmp-615229a94c330b9) ➜  docker-redis-cluster git:(pyinvoke) ✗ invoke -l
+(tmp-615229a94c330b9) ➜  docker-redis-cluster git:(invoke) ✗ invoke -l
 "Configured multiprocess pool size: 3
 Available tasks:
 
   build
+  list
   pull
   push
 ```
@@ -107,7 +108,7 @@ Available tasks:
 Each command is only taking one required positional argument `version`. Example:
 
 ```
-(tmp-615229a94c330b9) ➜  docker-redis-cluster git:(pyinvoke) ✗ invoke build 6.0
+(tmp-615229a94c330b9) ➜  docker-redis-cluster git:(invoke) ✗ invoke build 7.0
 ...
 ```
 
@@ -252,17 +253,45 @@ The following tags with pre-built images is available on `docker-hub`.
 
 Latest release in the most recent stable branch will be used as `latest` version.
 
-- latest == 6.2.1
+- latest == 7.0.10
+
+Redis 7.0.x version:
+
+- 7.0.10
+- 7.0.9
+- 7.0.8
+- 7.0.7
+- 7.0.6
+- 7.0.5
+- 7.0.4
+- 7.0.3
+- 7.0.2
+- 7.0.1
+- 7.0.0
 
 Redis 6.2.x versions:
 
+- 6.2.11
+- 6.2.10
+- 6.2.9
+- 6.2.8
+- 6.2.7
+- 6.2.6
+- 6.2.5
+- 6.2.4
+- 6.2.3
+- 6.2.2
 - 6.2.1
 - 6.2.0
-- 6.2-rc2
-- 6.2-rc1
 
 Redis 6.0.x versions:
 
+- 6.0.18
+- 6.0.17
+- 6.0.16
+- 6.0.15
+- 6.0.14
+- 6.0.13
 - 6.0.12
 - 6.0.11
 - 6.0.10
@@ -277,27 +306,12 @@ Redis 6.0.x versions:
 - 6.0.1
 - 6.0.0
 
-Redis 5.0.x version:
-
-- 5.0.12
-- 5.0.11
-- 5.0.10
-- 5.0.9
-- 5.0.8
-- 5.0.7
-- 5.0.6
-- 5.0.5
-- 5.0.4
-- 5.0.3
-- 5.0.2
-- 5.0.1
-- 5.0.0
-
 
 ## Unavailable major versions
 
 The following major versions is no longer available to be downloaded from docker.hub. You can still build and run them directly from this repo.
 
+- 5.0
 - 4.0
 - 3.2
 - 3.0
