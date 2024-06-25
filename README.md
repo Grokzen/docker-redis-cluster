@@ -229,10 +229,28 @@ The following tags with pre-built images is available on `docker-hub`.
 
 Latest release in the most recent stable branch will be used as `latest` version.
 
-- latest == 7.0.10
+- latest == 7.2.5
+
+Redis 7.4-rc1 version:
+
+- 7.4-rc1
+
+Redis 7.2.x version:
+
+- 7.2.5
+- 7.2.4
+- 7.2.3
+- 7.2.2
+- 7.2.1
+- 7.2.0
 
 Redis 7.0.x version:
 
+- 7.0.15
+- 7.0.14
+- 7.0.13
+- 7.0.12
+- 7.0.11
 - 7.0.10
 - 7.0.9
 - 7.0.8
@@ -247,6 +265,9 @@ Redis 7.0.x version:
 
 Redis 6.2.x versions:
 
+- 6.2.14
+- 6.2.13
+- 6.2.12
 - 6.2.11
 - 6.2.10
 - 6.2.9
@@ -262,6 +283,8 @@ Redis 6.2.x versions:
 
 Redis 6.0.x versions:
 
+- 6.0.20
+- 6.0.19
 - 6.0.18
 - 6.0.17
 - 6.0.16

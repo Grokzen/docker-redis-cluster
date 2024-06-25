@@ -1,3 +1,10 @@
+## 2024-06-25
+
+* Added 7.2.x releases and published docker images
+* added 7.4-rc1 release and published
+* Updated all older generations of images
+* New base image that contains more updated patches etc
+
 ## 2022-12-18
 
 * Added redis 7.0.x releases and published docker images
