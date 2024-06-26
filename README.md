@@ -200,6 +200,30 @@ Unfortunately Docker does not handle IPv6 NAT so, when acceptable, `--network ho
     # Example using plain docker
     docker run -e "IP=::1" -e "BIND_ADDRESS=::" --network host grokzen/redis-cluster:latest
 
+## Enable authentication
+By default, authentication using a password is disabled.
+This is configurable by an enviroment variable that specifies which a password string is required to authenticate itself using the AUTH command.
+
+| Environment variable | Default                                    |
+| -------------------- | ------------------------------------------ |
+| `PASSWORD`           | "" (requirepass/masterauth not configured) |
+
+## Protected mode
+By default, Protected mode is enabled.
+This is configurable by an enviroment variable that specifies which the system administator can still ignore the error given by Redis and just disable protected mode or manually bind all the interfaces.
+
+| Environment variable | Default                                    |
+| -------------------- | ------------------------------------------ |
+| `PROTECTED_MODE`           | "" (protected-mode is yes) |
+
+## Clean redis-data before start redis
+By default, All file in folder redis-data will be remove before start redis.
+This is configurable by an enviroment variable that specifies which the system administator can handle remove/keep all file in redis-data before start redis.
+
+| Environment variable | Default                                    |
+| -------------------- | ------------------------------------------ |
+| `RESET_DATA`           | "" (redis-data will be clean) |
+
 
 ## Build alternative redis versions
 

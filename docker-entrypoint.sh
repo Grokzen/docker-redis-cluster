@@ -42,24 +42,46 @@ if [ "$1" = 'redis-cluster' ]; then
     for port in $(seq $INITIAL_PORT $max_port); do
       mkdir -p /redis-conf/${port}
       mkdir -p /redis-data/${port}
-
-      if [ -e /redis-data/${port}/nodes.conf ]; then
-        rm /redis-data/${port}/nodes.conf
+      if [ -n "$RESET_DATA" -a "$RESET_DATA" = "false" ]; then
+        if [ ! -e /redis-data/${port}/nodes.conf ]; then
+          RESET_DATA="true"
+        fi
       fi
+    done
 
-      if [ -e /redis-data/${port}/dump.rdb ]; then
-        rm /redis-data/${port}/dump.rdb
+    for port in $(seq $INITIAL_PORT $max_port); do
+      if [ -z "$RESET_DATA" -o "$RESET_DATA" = "true" ]; then
+        echo "clear data"
+        if [ -e /redis-data/${port}/nodes.conf ]; then
+          rm /redis-data/${port}/nodes.conf
+        fi
+
+        if [ -e /redis-data/${port}/dump.rdb ]; then
+          rm /redis-data/${port}/dump.rdb
+        fi
+
+        if [ -e /redis-data/${port}/appendonly.aof ]; then
+          rm /redis-data/${port}/appendonly.aof
+        fi
       fi
-
-      if [ -e /redis-data/${port}/appendonly.aof ]; then
-        rm /redis-data/${port}/appendonly.aof
+      if [ -z "$PROTECTED_MODE" -o "$PROTECTED_MODE" = "true" ]; then
+      	protectedmode="protected-mode yes"
+      elif [ "$PROTECTED_MODE" = "false" ]; then
+      	protectedmode="protected-mode no"
       fi
 
       if [ "$port" -lt "$first_standalone" ]; then
-        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
+        if [ -n "$PASSWORD" ]; then
+          requirepass="requirepass '${PASSWORD}'"
+          masterauth="masterauth '${PASSWORD}'"
+        fi
+        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} REQUIREPASS=${requirepass} MASTERAUTH=${masterauth} PROTECTED_MODE=${protectedmode} envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
         nodes="$nodes $IP:$port"
       else
-        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} envsubst < /redis-conf/redis.tmpl > /redis-conf/${port}/redis.conf
+        if [ -n "$PASSWORD" ]; then
+          requirepass="requirepass '${PASSWORD}'"
+        fi
+        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} REQUIREPASS=${requirepass} PROTECTED_MODE=${protectedmode} envsubst < /redis-conf/redis.tmpl > /redis-conf/${port}/redis.conf
       fi
 
       if [ "$port" -lt $(($INITIAL_PORT + $MASTERS)) ]; then
@@ -80,21 +102,27 @@ if [ "$1" = 'redis-cluster' ]; then
     ## Check the version of redis-cli and if we run on a redis server below 5.0
     ## If it is below 5.0 then we use the redis-trib.rb to build the cluster
     #
-    /redis/src/redis-cli --version | grep -E "redis-cli 3.0|redis-cli 3.2|redis-cli 4.0"
+    if [ -z "$RESET_DATA" -o "$RESET_DATA" = "true" ]; then
+      /redis/src/redis-cli --version | grep -E "redis-cli 3.0|redis-cli 3.2|redis-cli 4.0"
+      if [ $? -eq 0 ]
+      then
+        echo "Using old redis-trib.rb to create the cluster"
+        echo "yes" | eval ruby /redis/src/redis-trib.rb create --replicas "$SLAVES_PER_MASTER" "$nodes"
+      else
+        echo "Using redis-cli to create the cluster"
+        if [ -z "$PASSWORD"  ]; then
+          echo "yes" | eval /redis/src/redis-cli --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$nodes"
+          password_arg="-a $PASSWORD"
+        else
+          echo "yes" | eval /redis/src/redis-cli --cluster create --cluster-replicas "$SLAVES_PER_MASTER" -a "$PASSWORD" "$nodes"
+        fi
+      fi
 
-    if [ $? -eq 0 ]
-    then
-      echo "Using old redis-trib.rb to create the cluster"
-      echo "yes" | eval ruby /redis/src/redis-trib.rb create --replicas "$SLAVES_PER_MASTER" "$nodes"
-    else
-      echo "Using redis-cli to create the cluster"
-      echo "yes" | eval /redis/src/redis-cli --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$nodes"
-    fi
-
-    if [ "$SENTINEL" = "true" ]; then
-      for port in $(seq $INITIAL_PORT $(($INITIAL_PORT + $MASTERS))); do
-        redis-sentinel /redis-conf/sentinel-${port}.conf &
-      done
+      if [ "$SENTINEL" = "true" ]; then
+        for port in $(seq $INITIAL_PORT $(($INITIAL_PORT + $MASTERS))); do
+          redis-sentinel /redis-conf/sentinel-${port}.conf &
+        done
+      fi
     fi
 
     tail -f /var/log/supervisor/redis*.log
