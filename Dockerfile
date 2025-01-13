@@ -14,6 +14,8 @@ RUN apt-get update -qq && \
     apt-get clean -yqq
 
 # # Ensure UTF-8 lang and locale
+RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+RUN echo "LANG=en_US.UTF-8" > /etc/locale.conf
 RUN locale-gen en_US.UTF-8
 ENV LANG       en_US.UTF-8
 ENV LC_ALL     en_US.UTF-8
