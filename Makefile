@@ -8,7 +8,10 @@ help:
 	@echo "  cli           run redis-cli inside the container on the server with port 7000"
 
 build:
-	docker-compose build
+	docker compose build
+
+build-tls:
+	docker compose -f docker-compose.tls.yml build
 
 up:
 	docker-compose up

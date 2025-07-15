@@ -1,0 +1,17 @@
+version: '2'
+services:
+  redis-cluster:
+    image: redis-cluster:tls-latest
+    environment:
+     IP: ${REDIS_CLUSTER_IP}
+     SENTINEL: ${REDIS_USE_SENTINEL}
+     STANDALONE: ${REDIS_USE_STANDALONE}
+    build:
+      context: .
+      dockerfile: ./Dockerfile.tls
+      args:
+        redis_version: '7.2.5'
+    hostname: server
+    ports:
+      - '7000-7050:7000-7050'
+      - '5000-5010:5000-5010'
