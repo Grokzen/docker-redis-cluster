@@ -18,6 +18,7 @@ help:
 
 # Default values
 CPU ?= 2
+VERSION ?= 7.2
 
 build:
 	docker compose build

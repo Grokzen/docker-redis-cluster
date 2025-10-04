@@ -1,0 +1,33 @@
+name: Test Build
+
+on:
+  pull_request:
+    branches:
+      - '**'
+  push:
+    branches-ignore:
+      - 'master'
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.13'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r dev-requirements.txt
+
+    - name: Pull latest Redis image
+      run: invoke pull --version latest
+
+    - name: Build Redis 7.2.0 image
+      run: invoke build --version 7.2.0 --cpu 1
