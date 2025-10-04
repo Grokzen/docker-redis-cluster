@@ -167,7 +167,7 @@ def initialize_version_data():
 
     Returns tuple of (version_mapping, latest_version)
     """
-    from .cache import fetch_github_releases_cached
+    from cache import fetch_github_releases_cached
 
     github_releases = fetch_github_releases_cached()
 

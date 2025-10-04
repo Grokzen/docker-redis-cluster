@@ -61,5 +61,5 @@ def fetch_github_releases_cached():
     Exits with error if GitHub cannot be reached or no versions found.
     """
     # Import here to avoid circular imports
-    from .versions import fetch_github_releases
+    from versions import fetch_github_releases
     return fetch_github_releases()
