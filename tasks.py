@@ -14,12 +14,19 @@ Usage Examples:
 """
 
 import multiprocessing
-import requests
-import re
 import sys
 from multiprocessing import Pool
 from invoke import task
 from invoke.context import Context
+
+from cache import fetch_github_releases_cached
+from versions import (
+    generate_version_ranges,
+    get_latest_version,
+    initialize_version_data,
+    version_name_to_version,
+    version_sort_key,
+)
 from contextlib import contextmanager
 
 
@@ -38,193 +45,10 @@ def managed_pool(pool_size):
         pool.join()
 
 
-def fetch_github_releases():
-    """
-    Fetch Redis releases from GitHub API and filter valid semver versions.
-    
-    Returns list of valid semver release versions (excludes RCs, betas, etc.)
-    Exits with error if GitHub cannot be reached or no versions found.
-    """
-    releases = []
-    
-    try:
-        for page in range(1, 10):  # Fetch more pages to get comprehensive history
-            response = requests.get(
-                "https://api.github.com/repos/redis/redis/releases",
-                params={"page": page, "per_page": 100},
-                timeout=30
-            )
-            
-            if response.status_code == 200:
-                page_releases = response.json()
-                if not page_releases:  # No more releases
-                    break
-                    
-                for release in page_releases:
-                    tag_name = release.get("tag_name", "")
-                    release_name = release.get("name", "")
-                    
-                    # Use tag_name primarily, fallback to name
-                    version = tag_name if tag_name else release_name
-                    
-                    # Filter valid semver versions (exclude RCs, betas, alphas, etc.)
-                    if is_valid_semver_release(version):
-                        releases.append(version)
-                        
-            elif response.status_code == 403:
-                print("Error: GitHub API rate limit exceeded. Please try again later.")
-                sys.exit(1)
-            else:
-                print(f"Error: GitHub API returned status {response.status_code}")
-                sys.exit(1)
-                
-    except requests.exceptions.RequestException as e:
-        print(f"Error: Cannot connect to GitHub API: {e}")
-        sys.exit(1)
-    
-    if not releases:
-        print("Error: No valid Redis versions found on GitHub")
-        sys.exit(1)
-    
-    return sorted(set(releases), key=lambda x: version_sort_key(x))
-
-
-def is_valid_semver_release(version):
-    """
-    Check if a version string is a valid semantic version release.
-    
-    Excludes pre-release versions (rc, alpha, beta, etc.)
-    """
-    # Remove 'v' prefix if present
-    clean_version = version.lstrip('v')
-    
-    # Pattern for semantic versioning (major.minor.patch)
-    semver_pattern = r'^(\d+)\.(\d+)\.(\d+)$'
-    
-    # Exclude pre-release versions (rc, alpha, beta, etc.)
-    exclude_patterns = [
-        r'rc\d*',     # release candidates
-        r'alpha',     # alpha versions
-        r'beta',      # beta versions
-        r'pre',       # pre-release
-        r'dev',       # development
-        r'unstable',  # unstable
-        r'-',         # any version with dash (pre-release indicator)
-    ]
-    
-    # Check if it matches semver pattern
-    if not re.match(semver_pattern, clean_version):
-        return False
-    
-    # Check if it contains any excluded patterns
-    for pattern in exclude_patterns:
-        if re.search(pattern, clean_version, re.IGNORECASE):
-            return False
-    
-    return True
-
-
-def version_sort_key(version):
-    """
-    Create a sort key for version strings for proper version ordering.
-    """
-    clean_version = version.lstrip('v')
-    parts = clean_version.split('.')
-    
-    try:
-        return tuple(int(part) for part in parts)
-    except ValueError:
-        # Fallback for non-numeric parts
-        return (0, 0, 0)
-
-
-def generate_version_ranges(github_releases):
-    """
-    Generate comprehensive version ranges based on GitHub releases.
-    
-    Creates complete version mapping including intermediate versions.
-    """
-    version_mapping = []
-    
-    # Group releases by major.minor
-    major_minor_groups = {}
-    for version in github_releases:
-        clean_version = version.lstrip('v')
-        parts = clean_version.split('.')
-        
-        if len(parts) >= 2:
-            try:
-                major = int(parts[0])
-                minor = int(parts[1])
-                patch = int(parts[2]) if len(parts) > 2 else 0
-                
-                key = f"{major}.{minor}"
-                if key not in major_minor_groups:
-                    major_minor_groups[key] = []
-                major_minor_groups[key].append(patch)
-            except ValueError:
-                continue
-    
-    # Generate ranges for each major.minor group
-    for major_minor, patches in major_minor_groups.items():
-        max_patch = max(patches)
-        
-        # Generate all versions from 0 to max_patch
-        for patch in range(0, max_patch + 1):
-            version_mapping.append(f"{major_minor}.{patch}")
-    
-    return sorted(set(version_mapping), key=lambda x: version_sort_key(x))
-
-
-def get_latest_version(versions):
-    """
-    Get the latest version from a list of versions.
-    """
-    if not versions:
-        print("Error: No versions provided to determine latest")
-        sys.exit(1)
-    
-    return max(versions, key=lambda x: version_sort_key(x))
-
-
-def initialize_version_data():
-    """
-    Initialize version data by fetching from GitHub.
-    Returns tuple of (version_mapping, latest_version)
-    """
-    print("Fetching Redis releases from GitHub...")
-    github_releases = fetch_github_releases()
-    
-    version_mapping = generate_version_ranges(github_releases)
-    latest_version = get_latest_version(github_releases)
-    
-    print(f"Successfully loaded {len(version_mapping)} versions from GitHub")
-    print(f"Latest version detected: {latest_version}")
-    
-    return version_mapping, latest_version
-
-
-def version_name_to_version(version, version_mapping, latest_version):
-    """
-    Convert version specification to actual version list.
-    
-    Handles special version keywords and filters versions based on user input.
-    - "all": Returns all available versions
-    - "latest": Returns only the latest stable version
-    - Specific version pattern: Returns matching versions (e.g., "7.2" returns all 7.2.x versions)
-    """
-    if version == "all":
-        return version_mapping
-    elif version == "latest":
-        return [latest_version]
-    else:
-        return filter_versions(version, version_mapping)
-
-
 def get_pool_size(cpu_from_cli):
     """
     Determine optimal multiprocessing pool size.
-    
+
     Calculates the number of worker processes to use for parallel operations.
     If no CPU count is specified, uses system CPU count minus 1 to avoid
     overwhelming the system.
@@ -238,39 +62,23 @@ def get_pool_size(cpu_from_cli):
     return pool_size
 
 
-def filter_versions(desired_version, version_mapping):
-    """
-    Filter available versions based on prefix matching.
-    
-    Searches through all available Redis versions and returns those
-    that start with the specified version pattern.
-    """
-    result = []
-
-    for version in version_mapping:
-        if version.startswith(desired_version):
-            result.append(version)
-
-    return result
-
-
 def _docker_pull(config):
     """
     Internal multiprocess worker for Docker pull operations.
-    
+
     Executes docker pull command for a specific Redis cluster version
     in a separate process for parallel execution.
-    
+
     Config dictionary should contain:
     - 'context': Invoke context object
     - 'version': Redis version to pull
     """
     context = config['context']
     version = config['version']
-    
+
     print(f" -- Starting docker pull for version: {version}")
     pull_command = f"docker pull grokzen/redis-cluster:{version}"
-    
+
     try:
         context.run(pull_command)
         print(f" -- Successfully pulled version: {version}")
@@ -281,20 +89,20 @@ def _docker_pull(config):
 def _docker_build(config):
     """
     Internal multiprocess worker for Docker build operations.
-    
+
     Executes docker build command for a specific Redis cluster version
     in a separate process for parallel execution.
-    
+
     Config dictionary should contain:
     - 'context': Invoke context object
     - 'version': Redis version to build
     """
     context = config['context']
     version = config['version']
-    
+
     print(f" -- Starting docker build for version: {version}")
     build_command = f"docker build --build-arg redis_version={version} -t grokzen/redis-cluster:{version} ."
-    
+
     try:
         context.run(build_command)
         print(f" -- Successfully built version: {version}")
@@ -305,20 +113,20 @@ def _docker_build(config):
 def _docker_push(config):
     """
     Internal multiprocess worker for Docker push operations.
-    
+
     Executes docker push command for a specific Redis cluster version
     in a separate process for parallel execution.
-    
+
     Config dictionary should contain:
     - 'context': Invoke context object
     - 'version': Redis version to push
     """
     context = config['context']
     version = config['version']
-    
+
     print(f" -- Starting docker push for version: {version}")
     push_command = f"docker push grokzen/redis-cluster:{version}"
-    
+
     try:
         context.run(push_command)
         print(f" -- Successfully pushed version: {version}")
@@ -523,7 +331,7 @@ def list_releases(c):
     """
     Display GitHub releases and show dynamic version loading status.
     
-    Fetches fresh Redis releases from GitHub API and displays comprehensive
+    Fetches Redis releases from GitHub API (using cache if available) and displays comprehensive
     information about available versions, latest releases, and the dynamic
     version loading process.
         
@@ -534,14 +342,15 @@ def list_releases(c):
         Shows GitHub releases, dynamic version loading status, and statistics.
         
     Note:
+        Uses cached data when available (30 minute TTL).
         Requires internet connection to access GitHub API.
         API rate limits may apply for unauthenticated requests.
     """
-    print("Fetching fresh GitHub releases...")
+    print("Fetching GitHub releases...")
     print("=" * 60)
     
-    # Fetch fresh releases directly (this will exit on error)
-    fresh_releases = fetch_github_releases()
+    # Fetch releases (cached if available)
+    fresh_releases = fetch_github_releases_cached()
     latest_version = get_latest_version(fresh_releases)
     current_generated = generate_version_ranges(fresh_releases)
     

@@ -15,6 +15,9 @@ help:
 	@echo "  push          push Redis Docker images (use VERSION and CPU variables)"
 	@echo "  list          list all available Redis versions"
 	@echo "  list-releases list Redis releases from GitHub"
+	@echo ""
+	@echo "Cache management tasks:"
+	@echo "  clear-cache   clear the GitHub API cache"
 
 # Default values
 CPU ?= 2
@@ -53,3 +56,9 @@ list:
 
 list-releases:
 	invoke list-releases
+
+# Cache management
+clear-cache:
+	rm -rf .cache/
+
+.PHONY: clear-cache
