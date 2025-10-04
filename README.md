@@ -82,64 +82,136 @@ docker run -e "IP=0.0.0.0" -p 7000-7005:7000-7005 grokzen/redis-cluster:latest
 
 
 
+# Installation
+
+## Prerequisites
+
+- Docker (latest version recommended, minimum 1.10)
+- Python 3.7+ (for building custom images using invoke)
+
+## Installing Invoke (for building custom images)
+
+If you want to build your own Redis cluster images, install the invoke task runner:
+
+```bash
+pip install invoke
+```
+
+## Quick Start with Pre-built Images
+
+The easiest way to get started is using pre-built images from Docker Hub:
+
+```bash
+# Pull and run the latest Redis cluster
+docker run -p 7000-7005:7000-7005 grokzen/redis-cluster:latest
+
+# Or use docker compose
+docker compose up
+```
+
 # Usage
 
-This git repo is using `invoke` to pull, build, push docker images. You can use it to build your own images if you like.
+## Running the Redis Cluster
 
-The invoke scripts in this repo is written only for python 3.7 and above
+### Using Docker Compose
 
-Install `invoke` with `pip install invoke`.
+Start the Redis cluster with docker compose:
 
-This script will run `N num of cpu - 1` parralell tasks based on your version input.
+```bash
+# Start the cluster
+make up
 
-To see available commands run `invoke -l` in the root folder of this repo. Example
+# Stop the cluster
+make down
 
+# Rebuild from scratch
+make rebuild
 ```
-(tmp-615229a94c330b9) ➜  docker-redis-cluster git:(invoke) ✗ invoke -l
-"Configured multiprocess pool size: 3
+
+### Using Docker Run
+
+Run directly with docker:
+
+```bash
+docker run -p 7000-7005:7000-7005 grokzen/redis-cluster:latest
+```
+
+### Connecting to the Cluster
+
+Connect using redis-cli:
+
+```bash
+# Connect from host
+redis-cli -c -p 7000
+
+# Or connect to the container's redis-cli
+make cli
+```
+
+## Building Custom Images
+
+This repository uses `invoke` to manage building, pulling, and pushing Redis cluster images. The invoke scripts support parallel processing using multiple CPU cores.
+
+### Available Invoke Tasks
+
+```bash
+invoke -l
+```
+
 Available tasks:
+- `pull` - Pull Redis Docker images from Docker Hub
+- `build` - Build Redis Docker images from source
+- `push` - Push Redis Docker images to Docker Hub
+- `list` - List all available Redis versions
+- `list-releases` - List Redis releases from GitHub
 
-  build
-  list
-  pull
-  push
+### Examples
+
+```bash
+# Pull all available versions
+invoke pull --version all
+
+# Build specific version with 4 CPUs
+invoke build --version 7.2 --cpu 4
+
+# Push latest version
+invoke push --version latest
+
+# List all available versions
+invoke list
+
+# List releases from GitHub
+invoke list-releases
 ```
 
-Each command is only taking one required positional argument `version`. Example:
+### Makefile Targets
 
+For convenience, Makefile targets are provided for both docker compose operations and invoke tasks:
+
+```bash
+# Docker Compose commands
+make build          # Build docker compose containers
+make up            # Start containers
+make down          # Stop containers
+make rebuild       # Rebuild without cache
+make bash          # Start bash in container
+make cli           # Connect redis-cli to cluster
+
+# Invoke tasks (use VERSION and CPU variables)
+make pull VERSION=7.2 CPU=4     # Pull specific version
+make build-images VERSION=7.2   # Build specific version
+make push VERSION=latest        # Push latest version
+make list                       # List versions
+make list-releases              # List GitHub releases
 ```
-(tmp-615229a94c330b9) ➜  docker-redis-cluster git:(invoke) ✗ invoke build 7.0
-...
-```
 
-and it will run the build step on all versions that starts with 6.0.
+Each invoke command supports version patterns:
+- `all` - All available versions
+- `latest` - Latest stable version
+- `7.2` - All 7.2.x versions
+- `7.2.1` - Specific version
 
-The only other optional usefull argument is `--cpu=N` and it will set how many paralell processes will be used. By default you will use n - 1 number of cpu cores that is available on your system. Commands like pull and push aare not very cpu intensive so using a higher number here might speed things up if you have good network bandwidth.
-
-
-## Makefile (legacy)
-
-Makefile still has a few docker-compose commands that can be used
-
-To build your own image run:
-
-    make build
-
-To run the container run:
-
-    make up
-
-To stop the container run:
-
-    make down
-
-To connect to your cluster you can use the redis-cli tool:
-
-    redis-cli -c -p 7000
-
-Or the built redis-cli tool inside the container that will connect to the cluster inside the container
-
-    make cli
+The `--cpu` parameter controls parallel processing (defaults to 2 if not specified).
 
 
 ## Include sentinel instances
@@ -148,14 +220,16 @@ Sentinel instances is not enabled by default.
 
 If running with plain docker send in `-e SENTINEL=true`.
 
-When running with docker-compose set the environment variable on your system `REDIS_USE_SENTINEL=true` and start your container.
+When running with docker compose set the environment variable on your system `REDIS_USE_SENTINEL=true` and start your container.
 
-    version: '2'
-    services:
-      redis-cluster:
-        ...
-      environment:
-        SENTINEL: 'true'
+```yaml
+version: '2'
+services:
+  redis-cluster:
+    ...
+  environment:
+    SENTINEL: 'true'
+```
 
 
 ## Change number of nodes
@@ -174,14 +248,16 @@ At the docker-compose provided by this repository, ports 7000-7050 are already m
 
 Also note that the number of sentinels (if enabled) is the same as the number of masters. The docker-compose file already maps ports 5000-5010 by default. You should also override those values if you have more than 10 masters.
 
-    version: '2'
-    services:
-      redis-cluster:
-        ...
-      environment:
-        INITIAL_PORT: 9000,
-        MASTERS: 2,
-        SLAVES_PER_MASTER: 2
+```yaml
+version: '2'
+services:
+  redis-cluster:
+    ...
+  environment:
+    INITIAL_PORT: 9000,
+    MASTERS: 2,
+    SLAVES_PER_MASTER: 2
+```
 
 
 ## IPv6 support
@@ -218,8 +294,10 @@ To build a different redis version use the argument `--build-arg` argument.
 
 To build a different redis version use the `--build-arg` argument.
 
-    # Example docker-compose
-    docker-compose build --build-arg "redis_version=6.0.11" redis-cluster
+```bash
+# Example docker compose
+docker compose build --build-arg "redis_version=6.0.11" redis-cluster
+```
 
 
 
