@@ -1,3 +1,16 @@
+## 2025-10-04
+
+* Updated Python version to 3.13 across all workflows and development environment
+* Implemented comprehensive caching system using cachetools with file-based persistence for GitHub API calls (30-minute TTL)
+* Modularized codebase by separating concerns into dedicated modules: cache.py for caching functionality and versions.py for version management
+* Updated Python requirements: invoke>=2.2.0, requests>=2.31.0, cachetools>=5.3.0
+* Created GitHub Actions workflow (test-build.yml) for automated testing and building on pull requests and non-master branches
+* Refactored multiprocessing pool management to use context managers for proper resource cleanup
+* Enhanced Makefile with Invoke task targets, clear-cache command, and CPU variable defaults
+* Restructured README.md with separate Installation/Usage sections and updated documentation
+* Fixed import issues by replacing relative imports with absolute imports for CI compatibility
+* Updated dockerimage.yml workflow to build all Redis images on master branch pushes using parallel processing
+
 ## 2024-06-25
 
 * Added 7.2.x releases and published docker images
