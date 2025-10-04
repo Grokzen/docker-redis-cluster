@@ -20,6 +20,22 @@ import sys
 from multiprocessing import Pool
 from invoke import task
 from invoke.context import Context
+from contextlib import contextmanager
+
+
+@contextmanager
+def managed_pool(pool_size):
+    """
+    Context manager for multiprocessing Pool that ensures proper cleanup.
+    
+    Automatically handles pool.close() and pool.join() when exiting the context.
+    """
+    pool = Pool(pool_size)
+    try:
+        yield pool
+    finally:
+        pool.close()
+        pool.join()
 
 
 def fetch_github_releases():
@@ -348,19 +364,14 @@ def pull(c, version, cpu=None):
         
     print(f" -- Found {len(versions)} version(s) to pull")
 
-    pool = Pool(get_pool_size(cpu))
-    
     configs = [
         {'context': c, 'version': v} 
         for v in versions
     ]
     
-    try:
+    with managed_pool(get_pool_size(cpu)) as pool:
         pool.map(_docker_pull, configs)
         print(f" -- Completed pulling {len(versions)} version(s)")
-    finally:
-        pool.close()
-        pool.join()
 
 
 @task(help={
@@ -401,19 +412,14 @@ def build(c, version, cpu=None):
         
     print(f" -- Found {len(versions)} version(s) to build")
 
-    pool = Pool(get_pool_size(cpu))
-    
     configs = [
         {'context': c, 'version': v} 
         for v in versions
     ]
     
-    try:
+    with managed_pool(get_pool_size(cpu)) as pool:
         pool.map(_docker_build, configs)
         print(f" -- Completed building {len(versions)} version(s)")
-    finally:
-        pool.close()
-        pool.join()
 
 
 @task(help={
@@ -454,19 +460,14 @@ def push(c, version, cpu=None):
         
     print(f" -- Found {len(versions)} version(s) to push")
 
-    pool = Pool(get_pool_size(cpu))
-    
     configs = [
         {'context': c, 'version': v} 
         for v in versions
     ]
     
-    try:
+    with managed_pool(get_pool_size(cpu)) as pool:
         pool.map(_docker_push, configs)
         print(f" -- Completed pushing {len(versions)} version(s)")
-    finally:
-        pool.close()
-        pool.join()
 
 
 @task(help={})
