@@ -116,6 +116,34 @@ and it will run the build step on all versions that starts with 6.0.
 
 The only other optional usefull argument is `--cpu=N` and it will set how many paralell processes will be used. By default you will use n - 1 number of cpu cores that is available on your system. Commands like pull and push aare not very cpu intensive so using a higher number here might speed things up if you have good network bandwidth.
 
+## Multi-architecture Support (ARM64/x86)
+
+The build system now supports multi-architecture builds using Docker Buildx. You can build images for both AMD64 and ARM64 platforms:
+
+### Platform Options
+
+- `amd64` - Build for AMD64/x86_64 only
+- `arm64` - Build for ARM64 only  
+- `both` or `multi` - Build for both platforms (default)
+
+### Building for ARM64
+
+```bash
+# Build for ARM64 only
+invoke build 7.2.5 --platforms=arm64
+
+# Build for both AMD64 and ARM64 (default)
+invoke build 7.2.5 --platforms=both
+
+# Push multi-arch images
+invoke push 7.2.5 --platforms=both
+
+# Use the dedicated buildx command
+invoke buildx 7.2.5 --platforms=arm64
+```
+
+The `buildx` command provides additional control over multi-architecture builds and uses Docker Buildx builder instances for cross-platform compilation.
+
 
 ## Makefile (legacy)
 

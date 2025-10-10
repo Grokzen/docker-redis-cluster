@@ -7,6 +7,23 @@ from invoke import task
 
 latest_version_string = "7.2.5"
 
+# Platform mapping for simplified platform arguments
+platform_mapping = {
+    "amd64": "linux/amd64",
+    "arm64": "linux/arm64", 
+    "both": "linux/amd64,linux/arm64",
+    "multi": "linux/amd64,linux/arm64"
+}
+
+def get_platforms(platform_arg):
+    """
+    Convert simplified platform argument to full platform string
+    """
+    if platform_arg in platform_mapping:
+        return platform_mapping[platform_arg]
+    # If it's already a full platform string, return as-is
+    return platform_arg
+
 # Unpublished versions
 version_config_mapping = []
 version_config_mapping += [f"3.0.{i}" for i in range(0, 8)]
@@ -72,19 +89,23 @@ def _docker_build(config):
     """
     Internal multiprocess method to run docker build command
     """
-    c, version = config
-    print(f" -- Starting docker build for version : {version}")
-    build_command = f"docker build --build-arg redis_version={version} -t grokzen/redis-cluster:{version} ."
+    c, version, platforms = config
+    print(f" -- Starting docker build for version : {version} on platforms: {platforms}")
+    # Create buildx builder if it doesn't exist
+    c.run("docker buildx create --use --name redis-cluster-builder || docker buildx use redis-cluster-builder", warn=True)
+    build_command = f"docker buildx build --platform={platforms} --build-arg redis_version={version} -t grokzen/redis-cluster:{version} ."
     c.run(build_command)
 
 
 def _docker_push(config):
     """
-    Internal multiprocess method to run docker push command
+    Internal multiprocess method to run docker push command with multi-arch support
     """
-    c, version = config
-    print(f" -- Starting docker push for version : {version}")
-    build_command = f"docker push grokzen/redis-cluster:{version}"
+    c, version, platforms = config
+    print(f" -- Starting docker push for version : {version} with platforms: {platforms}")
+    # Use buildx to build and push multi-arch images
+    c.run("docker buildx create --use --name redis-cluster-builder || docker buildx use redis-cluster-builder", warn=True)
+    build_command = f"docker buildx build --platform={platforms} --build-arg redis_version={version} -t grokzen/redis-cluster:{version} --push ."
     c.run(build_command)
 
 
@@ -103,31 +124,74 @@ def pull(c, version, cpu=None):
 
 
 @task
-def build(c, version, cpu=None):
-    print(f" -- Docker building version : {version}")
+def build(c, version, cpu=None, platforms="both"):
+    platforms = get_platforms(platforms)
+    print(f" -- Docker building version : {version} for platforms : {platforms}")
 
     pool = Pool(get_pool_size(cpu))
     pool.map(
         _docker_build,
         [
-            [c, version]
+            [c, version, platforms]
             for version in version_name_to_version(version)
         ],
     )
 
 
 @task
-def push(c, version, cpu=None):
-    print(f" -- Docker push version to docker-hub : {version}")
+def push(c, version, cpu=None, platforms="both"):
+    platforms = get_platforms(platforms)
+    print(f" -- Docker push version to docker-hub : {version} for platforms : {platforms}")
 
     pool = Pool(get_pool_size(cpu))
     pool.map(
         _docker_push,
         [
-            [c, version]
+            [c, version, platforms]
             for version in version_name_to_version(version)
         ],
     )
+
+
+@task
+def buildx(c, version, cpu=None, platforms="both"):
+    """
+    Build multi-architecture images using docker buildx without pushing.
+    Use the separate push command to push the images after building.
+    
+    Usage:
+        invoke buildx 7.2.5              # Build both platforms (default)
+        invoke buildx 7.2.5 --platforms=amd64  # Build only AMD64
+        invoke buildx 7.2.5 --platforms=arm64  # Build only ARM64
+    """
+    platforms = get_platforms(platforms)
+    print(f" -- Docker buildx for version : {version} on platforms : {platforms}")
+    
+    # Create buildx builder if it doesn't exist
+    c.run("docker buildx create --use --name redis-cluster-builder || docker buildx use redis-cluster-builder", warn=True)
+    
+    pool = Pool(get_pool_size(cpu))
+    pool.map(
+        _docker_buildx,
+        [
+            [c, version, platforms]
+            for version in version_name_to_version(version)
+        ],
+    )
+
+
+def _docker_buildx(config):
+    """
+    Internal multiprocess method to run docker buildx command
+    """
+    c, version, platforms = config
+    
+    # Build without loading to local Docker daemon by default
+    action = ""
+    
+    print(f" -- Starting docker buildx for version : {version} on platforms: {platforms}")
+    build_command = f"docker buildx build --platform={platforms} --build-arg redis_version={version} -t grokzen/redis-cluster:{version} ."
+    c.run(build_command)
 
 
 @task
