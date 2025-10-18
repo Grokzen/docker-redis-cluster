@@ -50,6 +50,20 @@ Moving forward when a new major release is shipped out, at the first minor relea
 
 This major version schema support follows the same major version support that redis itself use.
 
+## GitHub Actions CI (optional)
+
+A GitHub Actions workflow is provided to build (and optionally push) the Docker images for supported Redis versions. The workflow file is located at `.github/workflows/build-and-push.yml`.
+
+How to enable pushes to Docker Hub:
+
+1. Go to your repository Settings → Secrets and variables → Actions.
+2. Add two repository secrets:
+  - `DOCKERHUB_USERNAME` — your Docker Hub username
+  - `DOCKERHUB_TOKEN` — a Docker Hub access token (recommended) or password
+3. The workflow will automatically push built images to `DOCKERHUB_USERNAME/redis-cluster:<tag>` when those secrets are present.
+
+You can also manually trigger the workflow using the `workflow_dispatch` input `redis_version` to build a specific version.
+
 
 ## Redis instances inside the container
 
