@@ -11,22 +11,22 @@ To find all redis-server releases see them here https://github.com/antirez/redis
 
 ## Discussions, help, guides
 
-Github have recently released their `Discussions` feature into beta for more repositories across the github space. This feature is enabled on this repo since a while back.
+GitHub has recently released their `Discussions` feature into beta for more repositories across the GitHub space. This feature has been enabled on this repo for some time.
 
-Becuase we now have this feature, the issues feature will NOT be a place where you can now ask general questions or need simple help with this repo and what it provides.
+Because we now have this feature, the issues feature will NOT be a place where you can ask general questions or request simple help about this repo and what it provides.
 
 What can you expect to find in there?
 
  - A place where you can freely ask any question regarding this repo.
  - Ask questions like `how do i do X?`
  - General help with problems with this repo
- - Guides written by me or any other contributer with useful examples and ansers to commonly asked questions and how to resolve thos problems.
+ - Guides written by me or any other contributor with useful examples and answers to commonly asked questions and how to resolve those problems.
  - Approved answers to questions marked and promoted by me if help is provided by the community regarding some questions
 
 
 ## What this repo and container IS
 
-This repo exists as a resource to make it quick and simple to get a redis cluster up and running with no fuzz or issues with mininal effort. The primary use for this container is to get a cluster up and running in no time that you can use for demo/presentation/development. It is not intended or built for anything else.
+This repo exists as a resource to make it quick and simple to get a Redis cluster up and running with minimal effort. The primary use for this container is to get a cluster up and running quickly for demo/presentation/development. It is not intended or built for production use.
 
 I also aim to have every single release of redis that supports a cluster available for use so you can run the exact version you want.
 
@@ -35,7 +35,7 @@ I personally use this to develop redis cluster client code https://github.com/Gr
 
 ## What this repo and container IS NOT
 
-This container that i have built is not supposed to be some kind of production container or one that is used within any environment other than running locally on your machine. It is not ment to be run on kubernetes or in any other prod/stage/test/dev environment as a fully working commponent in that environment. If that works for you and your use-case then awesome. But this container will not change to fit any other primary solution than to be used locally on your machine.
+This container that I have built is not intended to be used as a production container or within any environment other than running locally on your machine. It is not meant to be run on Kubernetes or in any other prod/stage/test/dev environment as a fully working component in that context. If that works for you and your use-case then awesome, but this container will not change to fit any other primary scenario than local use.
 
 If you are looking for something else or some production quality or kubernetes compatible solution then you are looking in the wrong repo. There is other projects or forks of this repo that is compatible for that situation/solution.
 
@@ -44,7 +44,7 @@ For all other purposes other than what has been stated you are free to fork and/
 
 ## Redis major version support and docker.hub availability
 
-Starting from `2020-04-01` this repo will only support and make available on docker.hub all minor versions in the latest 3 major versions of redis-server software. At this date the tags on docker.hub for major versions 3.0, 3.2 & 4.0, 5.0 will be removed and only 6.0, 6.2, 7.0 will be available to download. This do not mean that you will not be able to build your desired version from this repo but there is no guarantees or support or hacks that will support this out of the box.
+Starting from `2020-04-01` this repo will only support and make available on Docker Hub all minor versions in the latest three major versions of Redis server software. At this date the tags on Docker Hub for major versions 3.0, 3.2, 4.0 and 5.0 will be removed and only 6.0, 6.2 and 7.0 will be available to download. This does not mean that you will not be able to build your desired version from this repo, but there are no guarantees or out-of-the-box support for older versions.
 
 Moving forward when a new major release is shipped out, at the first minor release X.Y.1 version of the next major release, all tags from the last supported major version will be removed from docker.hub. This will give some time for the community to adapt and move forward in the versions before the older major version is removed from docker.hub.
 
@@ -58,7 +58,7 @@ The cluster is 6 redis instances running with 3 master & 3 slaves, one slave for
 If the flag `-e "SENTINEL=true"` is passed there are 3 Sentinel nodes running on ports 5000 to 5002 matching cluster's master instances.
 
 
-This image requires at least `Docker` version 1.10 but the latest version is recommended.
+This image requires at least `Docker` version 1.10, but the latest version is recommended.
 
 
 
@@ -66,7 +66,7 @@ This image requires at least `Docker` version 1.10 but the latest version is rec
 
 If you are using this container to run a redis cluster on your mac computer, then you need to configure the container to use another IP address for cluster discovery as it can't use the default discovery IP that is hardcoded into the container.
 
-If you are using the docker-compose file to build the container, then you must export a environment variable on your machine before building the container.
+If you are using the docker-compose file to build the container, then you must export an environment variable on your machine before building the container.
 
 ```
 # This will make redis do cluster discovery and bind all nodes to ip 127.0.0.1 internally
@@ -84,13 +84,13 @@ docker run -e "IP=0.0.0.0" -p 7000-7005:7000-7005 grokzen/redis-cluster:latest
 
 # Usage
 
-This git repo is using `invoke` to pull, build, push docker images. You can use it to build your own images if you like.
+This git repo uses `invoke` to pull, build, and push Docker images. You can use it to build your own images if you like.
 
-The invoke scripts in this repo is written only for python 3.7 and above
+The invoke scripts in this repo are written for Python 3.7 and above.
 
 Install `invoke` with `pip install invoke`.
 
-This script will run `N num of cpu - 1` parralell tasks based on your version input.
+This script will run `N num of cpu - 1` parallel tasks based on your version input.
 
 To see available commands run `invoke -l` in the root folder of this repo. Example
 
@@ -114,7 +114,7 @@ Each command is only taking one required positional argument `version`. Example:
 
 and it will run the build step on all versions that starts with 6.0.
 
-The only other optional usefull argument is `--cpu=N` and it will set how many paralell processes will be used. By default you will use n - 1 number of cpu cores that is available on your system. Commands like pull and push aare not very cpu intensive so using a higher number here might speed things up if you have good network bandwidth.
+The only other optional useful argument is `--cpu=N` and it will set how many parallel processes will be used. By default you will use n - 1 CPU cores that are available on your system. Commands like pull and push are not very CPU intensive so using a higher number here might speed things up if you have good network bandwidth.
 
 
 ## Makefile (legacy)
@@ -160,7 +160,7 @@ When running with docker-compose set the environment variable on your system `RE
 
 ## Change number of nodes
 
-Be default, it is going to launch 3 masters with 1 slave per master. This is configurable through a number of environment variables:
+By default, it is going to launch 3 masters with 1 slave per master. This is configurable through a number of environment variables:
 
 | Environment variable | Default |
 | -------------------- |--------:|
